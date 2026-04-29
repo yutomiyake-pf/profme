@@ -9,5 +9,4 @@
   min-height: calc(100dvh - var(--header-height));
   max-width: var(--max-width-content);
   margin-inline: auto;
-  padding-inline: var(--spacing-md);
 }

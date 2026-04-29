@@ -1,0 +1,52 @@
+.hero {
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-background) 100%);
+  width: 100%;
+  padding-block: var(--spacing-2xl);
+  padding-inline: var(--spacing-md);
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+  text-align: center;
+}
+
+.badge {
+  display: inline-flex;
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-accent);
+  background-color: var(--color-accent-subtle);
+  border-radius: var(--radius-full);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-foreground);
+}
+
+.accent {
+  color: var(--color-accent);
+}
+
+.description {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-gray-600);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
