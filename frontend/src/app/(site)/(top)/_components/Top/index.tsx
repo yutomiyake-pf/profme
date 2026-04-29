@@ -3,6 +3,7 @@ import styles from "./styles.module.css";
 import { HeroSection } from "../HeroSection";
 import { FeaturesSection } from "../FeaturesSection";
 import { CardPreviewSection } from "../CardPreviewSection";
+import { EndorsementSection } from "../EndorsementSection";
 
 export const Top = () => {
   return (
@@ -11,6 +12,7 @@ export const Top = () => {
         <HeroSection />
         <FeaturesSection />
         <CardPreviewSection />
+        <EndorsementSection />
       </div>
     </PageLayout>
   );
