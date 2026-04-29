@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, ButtonHTMLAttributes } from "react";
+import clsx from "clsx";
 import styles from "./styles.module.css";
 
 type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "accent";
@@ -21,22 +22,22 @@ export function Button({
   fullWidth = false,
   isLoading = false,
   disabled,
-  className = "",
+  className,
   ...props
 }: Props) {
-  const classNames = [
-    styles.button,
-    styles[variant],
-    styles[size],
-    fullWidth ? styles.fullWidth : "",
-    isLoading ? styles.loading : "",
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
-    <button className={classNames} disabled={disabled || isLoading} {...props}>
+    <button
+      className={clsx(
+        styles.button,
+        styles[variant],
+        styles[size],
+        fullWidth && styles.fullWidth,
+        isLoading && styles.loading,
+        className,
+      )}
+      disabled={disabled || isLoading}
+      {...props}
+    >
       {isLoading ? <span className={styles.spinner} aria-hidden="true" /> : null}
       <span className={isLoading ? styles.hiddenText : ""}>{children}</span>
     </button>

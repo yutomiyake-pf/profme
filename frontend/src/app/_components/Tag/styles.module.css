@@ -1,0 +1,43 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-full);
+}
+
+.default {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-700);
+}
+
+.skill {
+  background-color: var(--color-tag-skill-bg);
+  color: var(--color-tag-skill);
+}
+
+.hobby {
+  background-color: var(--color-tag-hobby-bg);
+  color: var(--color-tag-hobby);
+}
+
+.fandom {
+  background-color: var(--color-tag-fandom-bg);
+  color: var(--color-tag-fandom);
+}
+
+.removeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-fast);
+}
+
+.removeButton:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}

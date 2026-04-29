@@ -1,0 +1,139 @@
+.card {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 1.6 / 1;
+}
+
+.compact {
+  aspect-ratio: 1.4 / 1;
+}
+
+.accentLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--color-accent);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  height: 100%;
+  padding: var(--spacing-md);
+}
+
+.compact .content {
+  padding: var(--spacing-sm);
+  gap: var(--spacing-xs);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.compact .header {
+  gap: var(--spacing-xs);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compact .name {
+  font-size: var(--font-size-sm);
+}
+
+.affiliation {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compact .affiliation {
+  font-size: var(--font-size-xs);
+}
+
+.bio {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.9);
+  line-height: var(--line-height-relaxed);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+/* Theme Colors */
+.navy {
+  background: linear-gradient(135deg, var(--theme-navy-start) 0%, var(--theme-navy-end) 100%);
+}
+
+.rose {
+  background: linear-gradient(135deg, var(--theme-rose-start) 0%, var(--theme-rose-end) 100%);
+}
+
+.forest {
+  background: linear-gradient(135deg, var(--theme-forest-start) 0%, var(--theme-forest-end) 100%);
+}
+
+.gold {
+  background: linear-gradient(135deg, var(--theme-gold-start) 0%, var(--theme-gold-end) 100%);
+}
+
+.mono {
+  background: linear-gradient(135deg, var(--theme-mono-start) 0%, var(--theme-mono-end) 100%);
+}
+
+.ocean {
+  background: linear-gradient(135deg, var(--theme-ocean-start) 0%, var(--theme-ocean-end) 100%);
+}
+
+.sunset {
+  background: linear-gradient(135deg, var(--theme-sunset-start) 0%, var(--theme-sunset-end) 100%);
+}
+
+.lavender {
+  background: linear-gradient(
+    135deg,
+    var(--theme-lavender-start) 0%,
+    var(--theme-lavender-end) 100%
+  );
+}
+
+.mint {
+  background: linear-gradient(135deg, var(--theme-mint-start) 0%, var(--theme-mint-end) 100%);
+}
+
+.charcoal {
+  background: linear-gradient(
+    135deg,
+    var(--theme-charcoal-start) 0%,
+    var(--theme-charcoal-end) 100%
+  );
+}

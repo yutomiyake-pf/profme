@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import clsx from "clsx";
 import styles from "./styles.module.css";
 
 interface Props {
@@ -8,10 +9,15 @@ interface Props {
   hoverable?: boolean;
 }
 
-export function Card({ children, className = "", padding = "md", hoverable = false }: Props) {
+export function Card({ children, className, padding = "md", hoverable = false }: Props) {
   return (
     <div
-      className={`${styles.card} ${styles[`padding-${padding}`]} ${hoverable ? styles.hoverable : ""} ${className}`}
+      className={clsx(
+        styles.card,
+        styles[`padding-${padding}`],
+        hoverable && styles.hoverable,
+        className,
+      )}
     >
       {children}
     </div>
