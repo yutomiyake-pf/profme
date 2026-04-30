@@ -1,18 +1,6 @@
 import { BusinessCardPreview } from "@/app/_components/BuisinessCardPreview";
+import { cardThemes } from "@/constants/cardTheme";
 import styles from "./styles.module.css";
-
-const themes = [
-  { id: "navy", label: "Navy" },
-  { id: "rose", label: "Rose" },
-  { id: "forest", label: "Forest" },
-  { id: "gold", label: "Gold" },
-  { id: "mono", label: "Mono" },
-  { id: "ocean", label: "Ocean" },
-  { id: "sunset", label: "Sunset" },
-  { id: "lavender", label: "Lavender" },
-  { id: "mint", label: "Mint" },
-  { id: "charcoal", label: "Charcoal" },
-] as const;
 
 const sampleProfile = {
   displayName: "山田 太郎",
@@ -34,7 +22,7 @@ export const CardPreviewSection = () => {
           <p className={styles.subtitle}>シーンや好みに合わせて、10種類のテーマから選べます。</p>
         </div>
         <div className={styles.cards}>
-          {themes.map((theme) => (
+          {cardThemes.map((theme) => (
             <div key={theme.id} className={styles.cardWrapper}>
               <BusinessCardPreview theme={theme.id} profile={sampleProfile} compact />
               <p className={styles.themeLabel}>{theme.label}</p>

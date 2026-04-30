@@ -1,0 +1,201 @@
+.card {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.accentLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-color: var(--color-accent);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md);
+  padding-block-start: calc(var(--spacing-md) + 6px);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  text-align: center;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+}
+
+.affiliation {
+  font-size: var(--font-size-base);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.bio {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+}
+
+.sectionLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gakuchika {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.gakuchikaText {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: rgba(255, 255, 255, 0.9);
+  white-space: pre-wrap;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.tagGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  padding-block-start: var(--spacing-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+}
+
+.socialLink:hover {
+  color: var(--color-white);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Custom Links */
+.customLinks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.customLinksList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.customLink {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-white);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.customLink:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Theme Colors */
+.navy {
+  background: linear-gradient(135deg, var(--theme-navy-start) 0%, var(--theme-navy-end) 100%);
+}
+
+.rose {
+  background: linear-gradient(135deg, var(--theme-rose-start) 0%, var(--theme-rose-end) 100%);
+}
+
+.forest {
+  background: linear-gradient(135deg, var(--theme-forest-start) 0%, var(--theme-forest-end) 100%);
+}
+
+.gold {
+  background: linear-gradient(135deg, var(--theme-gold-start) 0%, var(--theme-gold-end) 100%);
+}
+
+.mono {
+  background: linear-gradient(135deg, var(--theme-mono-start) 0%, var(--theme-mono-end) 100%);
+}
+
+.ocean {
+  background: linear-gradient(135deg, var(--theme-ocean-start) 0%, var(--theme-ocean-end) 100%);
+}
+
+.sunset {
+  background: linear-gradient(135deg, var(--theme-sunset-start) 0%, var(--theme-sunset-end) 100%);
+}
+
+.lavender {
+  background: linear-gradient(
+    135deg,
+    var(--theme-lavender-start) 0%,
+    var(--theme-lavender-end) 100%
+  );
+}
+
+.mint {
+  background: linear-gradient(135deg, var(--theme-mint-start) 0%, var(--theme-mint-end) 100%);
+}
+
+.charcoal {
+  background: linear-gradient(
+    135deg,
+    var(--theme-charcoal-start) 0%,
+    var(--theme-charcoal-end) 100%
+  );
+}

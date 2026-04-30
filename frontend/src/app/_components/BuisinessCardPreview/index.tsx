@@ -1,19 +1,8 @@
 import clsx from "clsx";
 import { Avatar } from "../Avatar";
 import { Tag } from "../Tag";
+import type { CardTheme } from "@/constants/cardTheme";
 import styles from "./styles.module.css";
-
-type CardTheme =
-  | "navy"
-  | "rose"
-  | "forest"
-  | "gold"
-  | "mono"
-  | "ocean"
-  | "sunset"
-  | "lavender"
-  | "mint"
-  | "charcoal";
 
 interface Profile {
   displayName: string;

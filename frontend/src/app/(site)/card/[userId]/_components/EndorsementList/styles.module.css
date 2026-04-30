@@ -1,0 +1,60 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.empty {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-500);
+  text-align: center;
+  padding-block: var(--spacing-2xl);
+}
+
+.endorsementCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.header {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.authorName {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-foreground);
+}
+
+.relationship {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+}
+
+.date {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-400);
+  flex-shrink: 0;
+}
+
+.episode {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-gray-700);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}

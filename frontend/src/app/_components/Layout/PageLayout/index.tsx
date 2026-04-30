@@ -7,12 +7,18 @@ type Props = {
   children: ReactNode;
   enableHeader?: boolean;
   enableFooter?: boolean;
+  isLoggedIn?: boolean;
 };
 
-export const PageLayout = ({ children, enableHeader = true, enableFooter = true }: Props) => {
+export const PageLayout = ({
+  children,
+  enableHeader = true,
+  enableFooter = true,
+  isLoggedIn = false,
+}: Props) => {
   return (
     <div className={styles.container}>
-      {enableHeader && <Header />}
+      {enableHeader && <Header isLoggedIn={isLoggedIn} />}
       <main className={styles.main}>{children}</main>
       {enableFooter && <Footer />}
     </div>
