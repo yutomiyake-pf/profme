@@ -1,0 +1,70 @@
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.tagSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.tagHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tagLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+}
+
+.tagCount {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-400);
+}
+
+.tagInputRow {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: stretch;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  flex-shrink: 0;
+  color: var(--color-white);
+  background-color: var(--color-accent);
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.addButton:hover:not(:disabled) {
+  background-color: var(--color-accent-light);
+}
+
+.addButton:disabled {
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-400);
+  cursor: not-allowed;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  min-height: 32px;
+}
+
+.tagHint {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-400);
+}

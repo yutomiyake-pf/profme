@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { IoClose } from "react-icons/io5";
 import styles from "./styles.module.css";
 
-type TagVariant = "skill" | "hobby" | "fandom" | "default";
+type TagVariant = "skill" | "hobby" | "fandom" | "qualification" | "default";
 
 interface Props {
   children: ReactNode;

@@ -28,6 +28,11 @@
   color: var(--color-tag-fandom);
 }
 
+.qualification {
+  background-color: var(--color-tag-qualification-bg);
+  color: var(--color-tag-qualification);
+}
+
 .removeButton {
   display: flex;
   align-items: center;
