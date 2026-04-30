@@ -40,12 +40,14 @@ export const ProfileEditForm = () => {
     const valid = await methods.trigger(stepFields[currentStep]);
     if (valid && currentStep < 3) {
       setCurrentStep((prev) => (prev + 1) as StepId);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handleBack = () => {
     if (currentStep > 1) {
       setCurrentStep((prev) => (prev - 1) as StepId);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
