@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/app/_components/Button";
 import { FullBusinessCard } from "@/app/_components/FullBusinessCard";
 import { PageLayout } from "@/app/_components/Layout/PageLayout";
-import { CardActions } from "../CardActions";
 import { EndorsementForm } from "../EndorsementForm";
 import { EndorsementList } from "../EndorsementList";
 import styles from "./styles.module.css";
@@ -97,11 +96,6 @@ export const CardDetail = ({ userId }: Props) => {
     <PageLayout enableFooter={false} isLoggedIn={viewerState !== "guest"}>
       <div className={styles.container}>
         <FullBusinessCard profile={mockProfile} />
-
-        <CardActions
-          cardUrl={`https://cardus.app/card/${userId}`}
-          isOwner={viewerState === "owner"}
-        />
 
         {viewerState === "follower" && (
           <div id="endorsement-form">

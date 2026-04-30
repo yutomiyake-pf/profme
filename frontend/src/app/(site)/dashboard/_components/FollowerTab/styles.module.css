@@ -1,0 +1,80 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.empty {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-500);
+  text-align: center;
+  padding-block: var(--spacing-3xl);
+}
+
+.count {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-600);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.followerCard {
+  position: relative;
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.cardLink {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.followerInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.followerName {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-foreground);
+}
+
+.followerUniversity {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+}
+
+.followerActions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+.approvedDate {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-400);
+}
+
+.removeButton {
+  color: var(--color-gray-400);
+  font-size: var(--font-size-xs);
+}
+
+.removeButton:hover {
+  color: var(--color-error);
+}
