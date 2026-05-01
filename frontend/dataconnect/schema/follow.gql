@@ -1,0 +1,11 @@
+# Follow: フォロー関係 (申請 → 承認 の 2 段階)。
+# 同じペアの重複申請を DB レベルで防ぐため (follower, followee) を複合主キーにする。
+# status: "pending" | "approved"
+
+type Follow @table(key: ["follower", "followee"]) {
+  follower: User!
+  followee: User!
+  status: String!
+  requestedAt: Timestamp! @default(expr: "request.time")
+  approvedAt: Timestamp
+}

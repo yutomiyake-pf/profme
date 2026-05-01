@@ -1,0 +1,19 @@
+# このディレクトリは `firebase dataconnect:sdk:generate` (npm の postinstall) で
+# 毎回再生成される。基本は ignore だが、npm install が `file:` 依存を解決する際に
+# 読み込む package.json 系だけはコミットしておく必要がある。
+
+/*
+!.gitignore
+!package.json
+!esm/
+!react/
+
+esm/*
+!esm/package.json
+
+react/*
+!react/package.json
+!react/esm/
+
+react/esm/*
+!react/esm/package.json

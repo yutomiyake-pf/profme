@@ -1,0 +1,10 @@
+# CustomLink: ポートフォリオ・ブログ等の自由 URL (1 ユーザにつき最大 10)。
+# 並び順は createdAt 昇順 + クライアント側でドラッグ並べ替え時に再保存する想定。
+
+type CustomLink @table {
+  id: UUID! @default(expr: "uuidV4()")
+  user: User!
+  title: String!
+  url: String!
+  createdAt: Timestamp! @default(expr: "request.time")
+}

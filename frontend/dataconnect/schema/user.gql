@@ -1,0 +1,33 @@
+# User: 1 ユーザにつき 1 行。Firebase Auth の uid を主キーにする。
+# プロフィール編集フォームのフィールドと 1:1 で対応。
+
+type User @table(key: ["uid"]) {
+  uid: String!
+  phoneNumber: String!
+
+  # 基本情報
+  displayName: String!
+  university: String
+  faculty: String
+  grade: String
+  bio: String
+  gakuchika: String
+  avatarUrl: String
+
+  # 名刺カラーテーマ ("navy" | "rose" | ... cardThemes と同期)
+  cardTheme: String!
+
+  # SNS リンク (URL を直接保存)
+  twitter: String
+  instagram: String
+  github: String
+  linkedin: String
+
+  # タグ系 (Postgres TEXT[])
+  skills: [String!]!
+  hobbies: [String!]!
+  qualifications: [String!]!
+
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}

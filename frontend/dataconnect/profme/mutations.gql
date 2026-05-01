@@ -1,0 +1,42 @@
+# 自分のプロフィールを作成 or 更新
+mutation UpsertMyProfile(
+  $phoneNumber: String!
+  $displayName: String!
+  $cardTheme: String!
+  $university: String
+  $faculty: String
+  $grade: String
+  $bio: String
+  $gakuchika: String
+  $avatarUrl: String
+  $twitter: String
+  $instagram: String
+  $github: String
+  $linkedin: String
+  $skills: [String!]!
+  $hobbies: [String!]!
+  $qualifications: [String!]!
+) @auth(level: USER) {
+  user_upsert(
+    data: {
+      uid_expr: "auth.uid"
+      phoneNumber: $phoneNumber
+      displayName: $displayName
+      cardTheme: $cardTheme
+      university: $university
+      faculty: $faculty
+      grade: $grade
+      bio: $bio
+      gakuchika: $gakuchika
+      avatarUrl: $avatarUrl
+      twitter: $twitter
+      instagram: $instagram
+      github: $github
+      linkedin: $linkedin
+      skills: $skills
+      hobbies: $hobbies
+      qualifications: $qualifications
+      updatedAt_expr: "request.time"
+    }
+  )
+}

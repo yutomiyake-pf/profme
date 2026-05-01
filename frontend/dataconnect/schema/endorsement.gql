@@ -1,0 +1,14 @@
+# Endorsement: 他己評価 (フォロワーが投稿 → 受信者が承認すると公開)。
+# status: "pending" | "approved" | "rejected"
+
+type Endorsement @table {
+  id: UUID! @default(expr: "uuidV4()")
+  recipient: User!
+  author: User!
+  relationship: String
+  episode: String!
+  tags: [String!]!
+  status: String!
+  createdAt: Timestamp! @default(expr: "request.time")
+  approvedAt: Timestamp
+}

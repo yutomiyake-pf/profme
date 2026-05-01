@@ -1,0 +1,44 @@
+# 自分のプロフィール取得 (ログイン済みユーザの uid を auth から取得)
+query GetMyProfile @auth(level: USER) {
+  user(key: { uid_expr: "auth.uid" }) {
+    uid
+    phoneNumber
+    displayName
+    university
+    faculty
+    grade
+    bio
+    gakuchika
+    avatarUrl
+    cardTheme
+    twitter
+    instagram
+    github
+    linkedin
+    skills
+    hobbies
+    qualifications
+  }
+}
+
+# 公開プロフィール取得 (名刺ページ /card/[userId] 用)
+query GetUserProfile($uid: String!) @auth(level: PUBLIC) {
+  user(key: { uid: $uid }) {
+    uid
+    displayName
+    university
+    faculty
+    grade
+    bio
+    gakuchika
+    avatarUrl
+    cardTheme
+    twitter
+    instagram
+    github
+    linkedin
+    skills
+    hobbies
+    qualifications
+  }
+}
