@@ -44,6 +44,8 @@ next-env.d.ts
 firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
+dataconnect-debug.log*
+pglite-debug.log*
 
 # firebase data connect: ツール内部キャッシュ・エミュレータ永続化
 /dataconnect/.dataconnect/
