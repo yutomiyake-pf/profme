@@ -1,12 +1,17 @@
 import { PageLayout } from "@/app/_components/Layout/PageLayout";
 import { ProfileEditForm } from "../ProfileEditForm";
+import { type ProfileFormValues } from "../ProfileEditForm/schema";
 import styles from "./styles.module.css";
 
-export const ProfileEdit = () => {
+interface Props {
+  initialValues: ProfileFormValues;
+}
+
+export const ProfileEdit = ({ initialValues }: Props) => {
   return (
-    <PageLayout enableFooter={false}>
+    <PageLayout enableFooter={false} isLoggedIn>
       <div className={styles.container}>
-        <ProfileEditForm />
+        <ProfileEditForm initialValues={initialValues} />
       </div>
     </PageLayout>
   );

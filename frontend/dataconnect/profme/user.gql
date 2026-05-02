@@ -1,6 +1,13 @@
 # User テーブルを起点とする query / mutation
+#
+# 全 operation を server (firebase-admin/data-connect) 経由でのみ呼ぶ前提:
+#   - NO_ACCESS  : クライアントから直接叩けない。admin SDK が impersonate
+#                  なしで呼んだ場合のみ通る (= server 専用 operation)。
+#   - USER       : 認証済みユーザのコンテキストで実行する。admin SDK で
+#                  impersonate.authClaims を渡した時のみ通る。
+#   - PUBLIC     : 誰でも引ける。閲覧用の最小情報のみ返すこと (PII 禁止)。
 
-# 自分のプロフィール取得 (ログイン済みユーザの uid を auth から取得)
+# 自分のプロフィール取得 (認証必須、auth.uid で自分の行を引く)
 query GetMyProfile @auth(level: USER) {
   user(key: { uid_expr: "auth.uid" }) {
     uid
@@ -20,11 +27,19 @@ query GetMyProfile @auth(level: USER) {
     skills
     hobbies
     qualifications
+    customLinks: customLinks_on_user {
+      id
+      title
+      url
+      createdAt
+    }
   }
 }
 
-# 公開プロフィール取得 (名刺ページ /card/[userId] 用)
-query GetUserProfile($uid: String!) @auth(level: PUBLIC) {
+# 任意ユーザのプロフィール取得 (公開)
+# /card/[userId] や API Route から uid を明示して呼ぶ。
+# PUBLIC で誰でも引けるため phoneNumber 等の PII は返さない。
+query GetProfile($uid: String!) @auth(level: PUBLIC) {
   user(key: { uid: $uid }) {
     uid
     displayName
@@ -42,22 +57,29 @@ query GetUserProfile($uid: String!) @auth(level: PUBLIC) {
     skills
     hobbies
     qualifications
+    customLinks: customLinks_on_user {
+      id
+      title
+      url
+      createdAt
+    }
   }
 }
 
-# 電話番号でユーザを検索 (ログインフローで利用、API Route 経由でのみ呼び出す)
+# 電話番号でユーザを検索 (ログインフローで利用、server 専用)
 # phoneNumber は @unique なので 0 or 1 件しか返らない。
 # 単体取得用の `first` フィールド (where 指定) を使い、見つからなければ data.user は null。
-query GetUserByPhone($phoneNumber: String!) @auth(level: PUBLIC) {
+query GetUserByPhone($phoneNumber: String!) @auth(level: NO_ACCESS) {
   user(first: { where: { phoneNumber: { eq: $phoneNumber } } }) {
     uid
     displayName
   }
 }
 
-# 新規ユーザ作成 (ログインフローのサインアップ時に利用)
+# 新規ユーザ作成 (ログインフローのサインアップ時、server 専用)
+# Firebase Auth で電話認証が完了した直後にだけ作るので、admin が直接呼ぶ。
 mutation CreateUser($uid: String!, $phoneNumber: String!, $displayName: String!)
-@auth(level: PUBLIC) {
+@auth(level: NO_ACCESS) {
   user_insert(
     data: {
       uid: $uid
@@ -67,6 +89,49 @@ mutation CreateUser($uid: String!, $phoneNumber: String!, $displayName: String!)
       skills: []
       hobbies: []
       qualifications: []
+    }
+  )
+}
+
+# プロフィール更新 (編集画面 → /api/users/me PUT 経由)
+# admin SDK の impersonate.authClaims で auth.uid を注入し、対象行を auth.uid で
+# 自動指定する。$uid を変数で受けないので、impersonate を忘れてもオペレーションは
+# 落ちる (誤って他人の行を更新できない設計)。
+# cardTheme と customLinks は別 UI で管理するのでここでは触らない。
+mutation UpdateMyProfile(
+  $displayName: String!
+  $university: String
+  $faculty: String
+  $grade: String
+  $bio: String
+  $gakuchika: String
+  $avatarUrl: String
+  $twitter: String
+  $instagram: String
+  $github: String
+  $linkedin: String
+  $skills: [String!]!
+  $hobbies: [String!]!
+  $qualifications: [String!]!
+) @auth(level: USER) {
+  user_update(
+    key: { uid_expr: "auth.uid" }
+    data: {
+      displayName: $displayName
+      university: $university
+      faculty: $faculty
+      grade: $grade
+      bio: $bio
+      gakuchika: $gakuchika
+      avatarUrl: $avatarUrl
+      twitter: $twitter
+      instagram: $instagram
+      github: $github
+      linkedin: $linkedin
+      skills: $skills
+      hobbies: $hobbies
+      qualifications: $qualifications
+      updatedAt_expr: "request.time"
     }
   )
 }

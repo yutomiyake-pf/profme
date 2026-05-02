@@ -1,6 +1,6 @@
 "use client";
 
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, useFormState } from "react-hook-form";
 import type { IconType } from "react-icons";
 import { FaGithub, FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
 import { IoAdd, IoClose } from "react-icons/io5";
@@ -47,11 +47,18 @@ const snsInputs: ReadonlyArray<{
 ];
 
 export const Sns = () => {
-  const {
-    register,
+  const { register, control } = useFormContext<ProfileFormValues>();
+  const { errors } = useFormState({
     control,
-    formState: { errors },
-  } = useFormContext<ProfileFormValues>();
+    name: ["twitter", "instagram", "github", "linkedin", "customLinks"],
+  });
+
+  const snsErrors: Record<SnsField, string | undefined> = {
+    twitter: errors.twitter?.message,
+    instagram: errors.instagram?.message,
+    github: errors.github?.message,
+    linkedin: errors.linkedin?.message,
+  };
 
   const { fields, append, remove } = useFieldArray({ control, name: "customLinks" });
 
@@ -73,7 +80,7 @@ export const Sns = () => {
               inputMode="url"
               placeholder={placeholder}
               aria-label={label}
-              error={errors[name]?.message}
+              error={snsErrors[name]}
               {...register(name)}
             />
           </div>

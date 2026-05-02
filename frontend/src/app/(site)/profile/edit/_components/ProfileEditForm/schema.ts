@@ -30,24 +30,6 @@ export const profileFormSchema = z.object({
 
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-export const defaultProfileFormValues: ProfileFormValues = {
-  displayName: "",
-  university: "",
-  faculty: "",
-  grade: "",
-  bio: "",
-  gakuchika: "",
-  avatarUrl: "",
-  twitter: "",
-  instagram: "",
-  github: "",
-  linkedin: "",
-  customLinks: [],
-  skills: [],
-  hobbies: [],
-  qualifications: [],
-};
-
 export const stepFields = {
   1: ["displayName", "university", "faculty", "grade", "bio", "gakuchika", "avatarUrl"],
   2: ["twitter", "instagram", "github", "linkedin", "customLinks"],

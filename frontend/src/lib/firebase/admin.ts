@@ -1,22 +1,22 @@
 import "server-only";
 
-import { cert, getApps as getAdminApps, initializeApp as initializeAdminApp } from "firebase-admin/app";
-import { getAuth as getAdminAuth } from "firebase-admin/auth";
-import { getStorage as getAdminStorage } from "firebase-admin/storage";
-
 import {
-  getApps as getFirebaseApps,
-  initializeApp as initializeFirebaseApp,
-} from "firebase/app";
-import { connectDataConnectEmulator, getDataConnect } from "firebase/data-connect";
+  cert,
+  getApps as getAdminApps,
+  initializeApp as initializeAdminApp,
+} from "firebase-admin/app";
+import { getAuth as getAdminAuth } from "firebase-admin/auth";
+import { getDataConnect as getAdminDataConnect } from "firebase-admin/data-connect";
+import { getStorage as getAdminStorage } from "firebase-admin/storage";
 import { connectorConfig } from "@dataconnect/generated";
 
 // --------------------------------------------------------------------------
-// Firebase Admin SDK (Auth / Storage)
+// Firebase Admin SDK (Auth / Storage / Data Connect)
 // --------------------------------------------------------------------------
 // firebase-admin の Auth/Storage はエミュレータ用の env が立っていれば
 // 自動的にそちらへ接続する (FIREBASE_AUTH_EMULATOR_HOST /
-// FIREBASE_STORAGE_EMULATOR_HOST)。明示的な connectXxxEmulator は無い。
+// FIREBASE_STORAGE_EMULATOR_HOST)。Data Connect も同様に
+// DATA_CONNECT_EMULATOR_HOST を見て自動接続する。
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY!);
 
@@ -30,30 +30,16 @@ const adminApp = getAdminApps().length
 export const adminAuth = getAdminAuth(adminApp);
 export const adminStorage = getAdminStorage(adminApp);
 
-// --------------------------------------------------------------------------
-// Firebase Data Connect (server-side)
-// --------------------------------------------------------------------------
-// Data Connect は firebase-admin に対応する API がないため、サーバ側でも
-// firebase/data-connect (クライアント SDK) を使う。Next.js の API Route は
-// Node ランタイムなのでそのまま動く。
-//
-// 認可: @auth(level: USER) の operation を呼ぶ場合は、ユーザの ID Token を
-// 明示的に渡す必要がある (firebase-admin の verifySessionCookie で取った
-// セッションから ID Token を再取得 or 別経路で）。本ファイルでは
-// dataConnect インスタンスのみ用意し、auth 文脈は呼び出し側で組み立てる。
-
-const SERVER_DC_APP_NAME = "[server-data-connect]";
-
-const dcApp =
-  getFirebaseApps().find((a) => a.name === SERVER_DC_APP_NAME) ??
-  initializeFirebaseApp(
-    { projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID },
-    SERVER_DC_APP_NAME,
-  );
-
-export const dataConnect = getDataConnect(dcApp, connectorConfig);
-
-if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === "true") {
-  const [host, port] = (process.env.DATA_CONNECT_EMULATOR_HOST ?? "127.0.0.1:9399").split(":");
-  connectDataConnectEmulator(dataConnect, host, Number(port));
-}
+// Data Connect は server からのみ admin SDK で呼ぶ:
+//   - impersonate なし → admin 権限で実行 (NO_ACCESS な operation も通る)
+//   - impersonate.authClaims → 指定ユーザの auth コンテキストで実行 (USER 用)
+// 生成 SDK の関数 (updateMyProfile など) はクライアント SDK 用なので使わず、
+// executeQuery / executeMutation を operation 名で呼ぶ。
+export const dataConnectAdmin = getAdminDataConnect(
+  {
+    serviceId: connectorConfig.service,
+    location: connectorConfig.location,
+    connector: connectorConfig.connector,
+  },
+  adminApp,
+);

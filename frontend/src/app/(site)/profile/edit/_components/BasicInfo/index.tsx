@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useFormState } from "react-hook-form";
 import { Input } from "@/app/_components/Input";
 import { Textarea } from "@/app/_components/Textarea";
 import { ProfileFormValues } from "../ProfileEditForm/schema";
@@ -11,16 +11,12 @@ import Image from "next/image";
 const gradeOptions = ["1年", "2年", "3年", "4年", "修士1年", "修士2年", "博士"];
 
 export const BasicInfo = () => {
-  const {
-    register,
-    watch,
-    formState: { errors },
-  } = useFormContext<ProfileFormValues>();
+  const { register, watch, control } = useFormContext<ProfileFormValues>();
+  // useFormContext からの formState destructure は subscription が効かないので useFormState を使う
+  const { errors } = useFormState({ control });
 
   const displayName = watch("displayName");
   const avatarUrl = watch("avatarUrl");
-  const bio = watch("bio");
-  const gakuchika = watch("gakuchika");
 
   return (
     <div className={styles.stepContent}>
@@ -88,7 +84,6 @@ export const BasicInfo = () => {
         showCount
         hint="あなたのことを簡潔に紹介してください"
         error={errors.bio?.message}
-        value={bio}
         {...register("bio")}
       />
 
@@ -99,7 +94,6 @@ export const BasicInfo = () => {
         showCount
         hint="就活やインターンでアピールしたい経験を書いてください"
         error={errors.gakuchika?.message}
-        value={gakuchika}
         {...register("gakuchika")}
       />
     </div>
