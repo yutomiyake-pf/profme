@@ -15,7 +15,8 @@ const postBodySchema = z.object({
 });
 
 export const POST = createRoute(
-  withZod({ body: postBodySchema }, async ({ body }) => {
+  withZod({ body: postBodySchema }),
+  async ({ body }) => {
     let decoded;
     try {
       decoded = await adminAuth.verifyIdToken(body.idToken);
@@ -60,7 +61,7 @@ export const POST = createRoute(
       maxAge: SESSION_DURATION_MS / 1000,
     });
     return res;
-  }),
+  },
 );
 
 export const DELETE = createRoute(async () => {

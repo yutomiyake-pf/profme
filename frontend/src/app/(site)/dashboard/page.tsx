@@ -1,14 +1,25 @@
+import { z } from "zod";
+import { composePage, withSession, withZodSearchParams } from "@/lib/next";
 import { Dashboard } from "./_components/Dashboard";
-import { TAB_QUERY_KEY, parseTab } from "./_components/Dashboard/tabs";
+import { DEFAULT_TAB, TAB_QUERY_KEY, TAB_VALUES } from "./_components/Dashboard/tabs";
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<Record<string, never>>;
 }
 
-export default async function Page({ searchParams }: Props) {
-  const params = await searchParams;
-  const raw = params[TAB_QUERY_KEY];
-  const activeTab = parseTab(typeof raw === "string" ? raw : undefined);
+// 不正な ?tab=... が来てもデフォルトに倒す
+const searchParamsSchema = z.object({
+  [TAB_QUERY_KEY]: z.enum(TAB_VALUES).catch(DEFAULT_TAB).optional(),
+});
 
-  return <Dashboard activeTab={activeTab} />;
+export default async function Page(props: Props) {
+  return composePage(
+    withSession({ requireAuth: true }),
+    withZodSearchParams(searchParamsSchema),
+    async ({ parsedSearchParams }) => {
+      const activeTab = parsedSearchParams[TAB_QUERY_KEY] ?? DEFAULT_TAB;
+      return <Dashboard activeTab={activeTab} />;
+    },
+  )(props);
 }

@@ -11,8 +11,9 @@ const bodySchema = z.object({
 });
 
 export const POST = createRoute(
-  withZod({ body: bodySchema }, async ({ body }) => {
+  withZod({ body: bodySchema }),
+  async ({ body }) => {
     const { data } = await getUserByPhone(dataConnect, { phoneNumber: body.phoneNumber });
     return NextResponse.json({ exists: !!data.user });
-  }),
+  },
 );
