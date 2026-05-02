@@ -1,48 +1,84 @@
 "use client";
 
-import { useFormContext, useFormState } from "react-hook-form";
+import { type ChangeEvent, useRef } from "react";
+import Image from "next/image";
+import { useFormContext, useFormState, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 import { Input } from "@/app/_components/Input";
 import { Textarea } from "@/app/_components/Textarea";
+import { AVATAR_ALLOWED_MIME } from "@/constants/avatar";
+import { AvatarUploadContainer } from "../../_containers/AvatarUploadContainer";
 import { ProfileFormValues } from "../ProfileEditForm/schema";
 import { StepHeader } from "../StepHeader";
 import styles from "./styles.module.css";
-import Image from "next/image";
 
 const gradeOptions = ["1年", "2年", "3年", "4年", "修士1年", "修士2年", "博士"];
 
 export const BasicInfo = () => {
-  const { register, watch, control } = useFormContext<ProfileFormValues>();
-  // useFormContext からの formState destructure は subscription が効かないので useFormState を使う
+  const { register, control, setValue } = useFormContext<ProfileFormValues>();
+  // useFormContext からの formState destructure / watch は subscription が効かないので明示的な hook を使う
   const { errors } = useFormState({ control });
+  const displayName = useWatch({ control, name: "displayName" });
+  const avatarUrl = useWatch({ control, name: "avatarUrl" });
 
-  const displayName = watch("displayName");
-  const avatarUrl = watch("avatarUrl");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className={styles.stepContent}>
       <StepHeader title="基本情報" description="あなたの基本的な情報を入力してください" />
 
-      <div className={styles.avatarSection}>
-        <div className={styles.avatarPreview}>
-          {avatarUrl ? (
-            <Image
-              width={96}
-              height={96}
-              src={avatarUrl}
-              alt=""
-              className={styles.avatarImage}
-              objectFit="cover"
-            />
-          ) : (
-            <span className={styles.avatarPlaceholder}>
-              {displayName ? displayName.slice(0, 2) : "You"}
-            </span>
-          )}
-        </div>
-        <button type="button" className={styles.avatarButton}>
-          画像をアップロード
-        </button>
-      </div>
+      <AvatarUploadContainer>
+        {({ uploadAvatar, isUploading }) => {
+          const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+            const file = e.target.files?.[0];
+            e.target.value = "";
+            if (!file) return;
+            try {
+              const url = await uploadAvatar(file);
+              setValue("avatarUrl", url, { shouldDirty: true, shouldValidate: true });
+              toast.success("アップロードしました");
+            } catch (err) {
+              toast.error(err instanceof Error ? err.message : "アップロードに失敗しました");
+            }
+          };
+
+          return (
+            <div className={styles.avatarSection}>
+              <div className={styles.avatarPreview}>
+                {avatarUrl ? (
+                  <Image
+                    width={96}
+                    height={96}
+                    src={avatarUrl}
+                    alt=""
+                    className={styles.avatarImage}
+                    unoptimized
+                  />
+                ) : (
+                  <span className={styles.avatarPlaceholder}>
+                    {displayName ? displayName.slice(0, 2) : "You"}
+                  </span>
+                )}
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={AVATAR_ALLOWED_MIME.join(",")}
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+              <button
+                type="button"
+                className={styles.avatarButton}
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+              >
+                {isUploading ? "アップロード中..." : "画像をアップロード"}
+              </button>
+            </div>
+          );
+        }}
+      </AvatarUploadContainer>
 
       <div className={styles.formGrid}>
         <Input
