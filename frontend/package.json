@@ -16,8 +16,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "dataconnect:generate": "firebase dataconnect:sdk:generate",
+    "dataconnect:psql": "PGHOST=127.0.0.1 PGPORT=5433 PGUSER=postgres PGPASSWORD=postgres PGDATABASE=profme-dev-database psql",
     "emulators:start": "firebase emulators:start",
-    "emulators:stop": "pkill -f 'firebase emulators' || true",
+    "emulators:stop": "pkill -f 'firebase emulators' 2>/dev/null; pkill -f 'dataconnect-emulator' 2>/dev/null; pkill -f 'pglite' 2>/dev/null; true",
     "postinstall": "npm run dataconnect:generate || true"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "react-hook-form": "^7.74.0",
     "react-icons": "^5.6.0",
     "ress": "^5.0.2",
+    "sonner": "^2.0.7",
     "zod": "^4.3.6"
   },
   "devDependencies": {

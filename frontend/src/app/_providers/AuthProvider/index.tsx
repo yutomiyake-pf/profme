@@ -1,8 +1,10 @@
 "use client";
 
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
-import { type User, onAuthStateChanged } from "firebase/auth";
+import { type User, onIdTokenChanged } from "firebase/auth";
+import { sessionResponseSchema } from "@/app/api/auth/session/type";
 import { auth } from "@/lib/firebase/client";
+import { clientFetcher } from "@/lib/fetcher/client";
 
 interface AuthContextValue {
   user: User | null;
@@ -20,9 +22,33 @@ export const AuthProvider = ({ children }: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return onAuthStateChanged(auth, (next) => {
+    // onIdTokenChanged は onAuthStateChanged よりも頻繁に発火する:
+    //   - サインイン / サインアウト時
+    //   - SDK が ID Token を自動更新したとき (約 55 分ごと)
+    // ここで毎回サーバ側の session cookie も同期 → 短命 cookie + auto-refresh で
+    // 「14 日固定発行のまま放置されない」運用にできる。
+    return onIdTokenChanged(auth, async (next) => {
       setUser(next);
       setLoading(false);
+
+      if (next) {
+        // ID Token を取得してサーバに送り、cookie を発行し直す。
+        // 失敗しても UI は壊さないので throwErr: false。
+        const idToken = await next.getIdToken();
+        await clientFetcher("/api/auth/session", {
+          schema: sessionResponseSchema,
+          method: "POST",
+          body: { idToken },
+          throwErr: false,
+        });
+      } else {
+        // クライアント側がサインアウト → サーバ側の cookie も破棄して同期を保つ。
+        await clientFetcher("/api/auth/session", {
+          schema: sessionResponseSchema,
+          method: "DELETE",
+          throwErr: false,
+        });
+      }
     });
   }, []);
 

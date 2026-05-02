@@ -3,7 +3,7 @@
 
 type User @table(key: ["uid"]) {
   uid: String!
-  phoneNumber: String!
+  phoneNumber: String! @unique
 
   # 基本情報
   displayName: String!

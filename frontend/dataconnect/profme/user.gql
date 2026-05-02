@@ -44,3 +44,29 @@ query GetUserProfile($uid: String!) @auth(level: PUBLIC) {
     qualifications
   }
 }
+
+# 電話番号でユーザを検索 (ログインフローで利用、API Route 経由でのみ呼び出す)
+# phoneNumber は @unique なので 0 or 1 件しか返らない。
+# 単体取得用の `first` フィールド (where 指定) を使い、見つからなければ data.user は null。
+query GetUserByPhone($phoneNumber: String!) @auth(level: PUBLIC) {
+  user(first: { where: { phoneNumber: { eq: $phoneNumber } } }) {
+    uid
+    displayName
+  }
+}
+
+# 新規ユーザ作成 (ログインフローのサインアップ時に利用)
+mutation CreateUser($uid: String!, $phoneNumber: String!, $displayName: String!)
+@auth(level: PUBLIC) {
+  user_insert(
+    data: {
+      uid: $uid
+      phoneNumber: $phoneNumber
+      displayName: $displayName
+      cardTheme: "navy"
+      skills: []
+      hobbies: []
+      qualifications: []
+    }
+  )
+}

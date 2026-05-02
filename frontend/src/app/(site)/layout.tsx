@@ -1,4 +1,5 @@
 import { SiteLayout as Layout } from "@/app/_components/Layout/SiteLayout";
+import { Toaster } from "@/app/_components/Toaster";
 import { AuthProvider } from "@/app/_providers/AuthProvider";
 
 export default function SiteLayout({
@@ -9,6 +10,7 @@ export default function SiteLayout({
   return (
     <AuthProvider>
       <Layout>{children}</Layout>
+      <Toaster />
     </AuthProvider>
   );
 }
