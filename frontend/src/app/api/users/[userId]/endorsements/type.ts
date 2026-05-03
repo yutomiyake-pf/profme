@@ -7,7 +7,7 @@ import {
   ENDORSEMENT_TAGS,
 } from "@/constants/endorsement";
 
-export const ENDORSEMENT_PAGE_SIZE = 20;
+export const ENDORSEMENT_PAGE_SIZE = 5;
 
 export const endorsementsQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(50).default(ENDORSEMENT_PAGE_SIZE),
