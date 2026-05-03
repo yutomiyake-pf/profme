@@ -77,7 +77,7 @@ export const FollowRequestTab = ({
       {hasMore && (
         <Button
           type="button"
-          variant="outline"
+          variant="primary"
           onClick={loadMore}
           isLoading={isLoadingMore}
           disabled={isLoadingMore}

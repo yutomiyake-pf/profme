@@ -21,14 +21,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ user
       GetEndorsementsByRecipientVariables
     >("GetEndorsementsByRecipient", {
       recipientUid: userId,
-      limit: query.limit + 1,
+      limit: query.limit,
       offset: query.offset,
     });
 
-    const hasMore = data.endorsements.length > query.limit;
-    const endorsements = hasMore ? data.endorsements.slice(0, query.limit) : data.endorsements;
-
-    return NextResponse.json({ endorsements, hasMore });
+    const total = data.totals[0]?._count ?? 0;
+    return NextResponse.json({ endorsements: data.items, total });
   })(request);
 }
 

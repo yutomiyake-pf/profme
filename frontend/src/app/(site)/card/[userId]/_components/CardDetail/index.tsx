@@ -54,18 +54,18 @@ export const CardDetail = ({ profile, isOwner, isLoggedIn, relationship }: Props
         )}
 
         <EndorsementsContainer userId={profile.uid}>
-          {({ endorsements, isLoading, hasMore, error, loadMore }) => (
+          {({ endorsements, total, isLoading, hasMore, error, loadMore }) => (
             <section className={styles.endorsements}>
               <h2 className={styles.sectionTitle}>
                 Endorsement
-                <span className={styles.count}>{endorsements.length}</span>
+                <span className={styles.count}>{total}</span>
               </h2>
               <EndorsementList endorsements={endorsements} />
               {error && <p className={styles.errorMessage}>{error}</p>}
               {hasMore && (
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="primary"
                   onClick={loadMore}
                   isLoading={isLoading}
                   disabled={isLoading}

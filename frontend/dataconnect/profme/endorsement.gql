@@ -17,10 +17,11 @@ mutation CreateEndorsementRequest(
   )
 }
 
-# 公開閲覧用: 受信ユーザの承認済み Endorsement をページネーションで取得
+# 公開閲覧用: 受信ユーザの承認済み Endorsement をページネーションで取得 + 総件数も返す。
+# totals[0]._count で総件数 (0 件のときは ?? 0)。
 query GetEndorsementsByRecipient($recipientUid: String!, $limit: Int!, $offset: Int!)
 @auth(level: PUBLIC) {
-  endorsements(
+  items: endorsements(
     where: { recipientUid: { eq: $recipientUid }, status: { eq: "approved" } }
     orderBy: [{ approvedAt: DESC }]
     limit: $limit
@@ -36,6 +37,11 @@ query GetEndorsementsByRecipient($recipientUid: String!, $limit: Int!, $offset: 
       displayName
       avatarUrl
     }
+  }
+  totals: endorsements(
+    where: { recipientUid: { eq: $recipientUid }, status: { eq: "approved" } }
+  ) {
+    _count
   }
 }
 

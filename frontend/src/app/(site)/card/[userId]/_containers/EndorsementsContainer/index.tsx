@@ -19,6 +19,8 @@ export interface Endorsement {
 
 export interface EndorsementsRenderProps {
   endorsements: Endorsement[];
+  /** DB 上の総件数 (バッジに使う。表示済み件数 endorsements.length とは異なる) */
+  total: number;
   isLoading: boolean;
   hasMore: boolean;
   error: string | null;
@@ -32,6 +34,7 @@ interface Props {
 
 export const EndorsementsContainer = ({ userId, children }: Props) => {
   const [endorsements, setEndorsements] = useState<Endorsement[]>([]);
+  const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,7 +59,8 @@ export const EndorsementsContainer = ({ userId, children }: Props) => {
         approvedAt: e.approvedAt,
       }));
       setEndorsements((prev) => [...prev, ...next]);
-      setHasMore(data.hasMore);
+      setTotal(data.total);
+      setHasMore(offset + next.length < data.total);
     } catch (err) {
       setError(err instanceof Error ? err.message : "読み込みに失敗しました");
     } finally {
@@ -71,5 +75,5 @@ export const EndorsementsContainer = ({ userId, children }: Props) => {
     void loadMore();
   }, [loadMore]);
 
-  return <>{children({ endorsements, isLoading, hasMore, error, loadMore })}</>;
+  return <>{children({ endorsements, total, isLoading, hasMore, error, loadMore })}</>;
 };

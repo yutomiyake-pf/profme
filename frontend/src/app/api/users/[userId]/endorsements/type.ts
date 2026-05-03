@@ -29,7 +29,7 @@ const endorsementItemSchema = z.object({
 
 export const endorsementsResponseSchema = z.object({
   endorsements: z.array(endorsementItemSchema),
-  hasMore: z.boolean(),
+  total: z.number().int().min(0),
 });
 
 export const createEndorsementRequestSchema = z.object({
