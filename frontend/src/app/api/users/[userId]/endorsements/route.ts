@@ -38,7 +38,8 @@ export async function GET(
   )(request);
 }
 
-// recipient のフォロワー (= author の outgoing approved) のみ endorsement を投稿できる。
+// recipient のフォロワー (= author 自身の outgoing approved、または incoming approved
+// = 相手の申請を author が承認済) のみ endorsement を投稿できる。
 // UI 側で出し分けてはいるが、API 経由で直接叩かれるケースを防ぐためサーバ側でも検証する。
 export async function POST(
   request: Request,
@@ -58,7 +59,10 @@ export async function POST(
         GetFollowRelationshipData,
         GetFollowRelationshipVariables
       >("GetFollowRelationship", { other: userId }, impersonate);
-      if (rel.outgoing?.status !== "approved") {
+      // 自分→相手 が approved、または 相手→自分 を自分が approved していれば follower
+      const isFollower =
+        rel.outgoing?.status === "approved" || rel.incoming?.status === "approved";
+      if (!isFollower) {
         return NextResponse.json({ error: "must_be_follower" }, { status: 403 });
       }
 

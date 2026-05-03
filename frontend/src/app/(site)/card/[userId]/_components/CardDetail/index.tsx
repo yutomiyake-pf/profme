@@ -22,7 +22,10 @@ interface Props {
 const ENDORSEMENT_FORM_ID = "endorsement-form";
 
 export const CardDetail = ({ profile, isOwner, isLoggedIn, relationship }: Props) => {
-  const isFollower = relationship?.outgoing === "approved";
+  // 自分のフォローが承認された (outgoing approved) か、
+  // または相手からの申請を自分が承認した (incoming approved) ら follower 扱い
+  const isFollower =
+    relationship?.outgoing === "approved" || relationship?.incoming === "approved";
 
   return (
     <PageLayout enableFooter={false} isLoggedIn={isLoggedIn}>
