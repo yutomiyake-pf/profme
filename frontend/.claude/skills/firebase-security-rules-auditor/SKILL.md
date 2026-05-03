@@ -118,11 +118,22 @@ Emulator UI > Storage で実際にアップロードを試して Rules の挙動
 ユニットテスト用に `@firebase/rules-unit-testing` パッケージが使える:
 
 ```ts
-import { initializeTestEnvironment, assertSucceeds, assertFails } from "@firebase/rules-unit-testing";
+import {
+  initializeTestEnvironment,
+  assertSucceeds,
+  assertFails,
+} from "@firebase/rules-unit-testing";
 
-const testEnv = await initializeTestEnvironment({ projectId: "demo-profme", storage: { rules: readFileSync("storage.rules", "utf8") } });
-await assertSucceeds(uploadAvatar(testEnv.authenticatedContext("user-1"), "users/user-1/avatar/me.png"));
-await assertFails(uploadAvatar(testEnv.authenticatedContext("user-2"), "users/user-1/avatar/evil.png"));
+const testEnv = await initializeTestEnvironment({
+  projectId: "demo-profme",
+  storage: { rules: readFileSync("storage.rules", "utf8") },
+});
+await assertSucceeds(
+  uploadAvatar(testEnv.authenticatedContext("user-1"), "users/user-1/avatar/me.png"),
+);
+await assertFails(
+  uploadAvatar(testEnv.authenticatedContext("user-2"), "users/user-1/avatar/evil.png"),
+);
 ```
 
 ## デプロイ

@@ -13,38 +13,29 @@ import { createEndorsementRequestSchema, endorsementsQuerySchema } from "./type"
 
 export const runtime = "nodejs";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ userId: string }> },
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params;
-  return createRoute(
-    withZod({ query: endorsementsQuerySchema }),
-    async ({ query }) => {
-      const { data } = await dataConnectAdmin.executeQuery<
-        GetEndorsementsByRecipientData,
-        GetEndorsementsByRecipientVariables
-      >("GetEndorsementsByRecipient", {
-        recipientUid: userId,
-        limit: query.limit + 1,
-        offset: query.offset,
-      });
+  return createRoute(withZod({ query: endorsementsQuerySchema }), async ({ query }) => {
+    const { data } = await dataConnectAdmin.executeQuery<
+      GetEndorsementsByRecipientData,
+      GetEndorsementsByRecipientVariables
+    >("GetEndorsementsByRecipient", {
+      recipientUid: userId,
+      limit: query.limit + 1,
+      offset: query.offset,
+    });
 
-      const hasMore = data.endorsements.length > query.limit;
-      const endorsements = hasMore ? data.endorsements.slice(0, query.limit) : data.endorsements;
+    const hasMore = data.endorsements.length > query.limit;
+    const endorsements = hasMore ? data.endorsements.slice(0, query.limit) : data.endorsements;
 
-      return NextResponse.json({ endorsements, hasMore });
-    },
-  )(request);
+    return NextResponse.json({ endorsements, hasMore });
+  })(request);
 }
 
 // recipient のフォロワー (= author 自身の outgoing approved、または incoming approved
 // = 相手の申請を author が承認済) のみ endorsement を投稿できる。
 // UI 側で出し分けてはいるが、API 経由で直接叩かれるケースを防ぐためサーバ側でも検証する。
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ userId: string }> },
-) {
+export async function POST(request: Request, { params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params;
   return createRoute(
     withSession(),
@@ -60,8 +51,7 @@ export async function POST(
         GetFollowRelationshipVariables
       >("GetFollowRelationship", { other: userId }, impersonate);
       // 自分→相手 が approved、または 相手→自分 を自分が approved していれば follower
-      const isFollower =
-        rel.outgoing?.status === "approved" || rel.incoming?.status === "approved";
+      const isFollower = rel.outgoing?.status === "approved" || rel.incoming?.status === "approved";
       if (!isFollower) {
         return NextResponse.json({ error: "must_be_follower" }, { status: 403 });
       }

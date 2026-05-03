@@ -9,10 +9,10 @@ Profme では Firebase を **Auth (電話番号認証)** / **Data Connect (Cloud
 
 ## SDK の使い分け
 
-| SDK | パッケージ | 用途 |
-| --- | --- | --- |
-| クライアント SDK | `firebase` | ブラウザ上での認証・Storage 直アップロード・Data Connect クエリ |
-| Admin SDK | `firebase-admin` | Next.js のサーバ (API Route / Server Components) での ID Token 検証・セッション Cookie 発行・Admin 権限での操作 |
+| SDK              | パッケージ       | 用途                                                                                                            |
+| ---------------- | ---------------- | --------------------------------------------------------------------------------------------------------------- |
+| クライアント SDK | `firebase`       | ブラウザ上での認証・Storage 直アップロード・Data Connect クエリ                                                 |
+| Admin SDK        | `firebase-admin` | Next.js のサーバ (API Route / Server Components) での ID Token 検証・セッション Cookie 発行・Admin 権限での操作 |
 
 クライアント SDK は **公開可能** な `apiKey` 等で初期化（プロジェクトを識別するだけのキーで、認可は Security Rules が担う）。Admin SDK は **サービスアカウント JSON が必須**。サーバ側でのみ使う。
 
@@ -46,10 +46,10 @@ npx firebase use --add profme-prod  # 追加 alias を登録
 ```json
 {
   "emulators": {
-    "auth":        { "port": 9099 },
+    "auth": { "port": 9099 },
     "dataconnect": { "port": 9399 },
-    "storage":     { "port": 9199 },
-    "ui":          { "enabled": true, "port": 4000 },
+    "storage": { "port": 9199 },
+    "ui": { "enabled": true, "port": 4000 },
     "singleProjectMode": true
   }
 }

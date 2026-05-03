@@ -3,11 +3,7 @@
 import { type ReactNode, useState } from "react";
 import { getDownloadURL, ref as storageRef, uploadBytes } from "firebase/storage";
 import { auth, storage } from "@/lib/firebase/client";
-import {
-  AVATAR_ALLOWED_MIME,
-  AVATAR_MAX_BYTES,
-  type AvatarMimeType,
-} from "@/constants/avatar";
+import { AVATAR_ALLOWED_MIME, AVATAR_MAX_BYTES, type AvatarMimeType } from "@/constants/avatar";
 
 export interface AvatarUploadRenderProps {
   uploadAvatar: (file: File) => Promise<string>;

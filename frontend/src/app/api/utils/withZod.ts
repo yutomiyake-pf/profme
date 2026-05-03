@@ -28,9 +28,7 @@ export function withZod<
     query: TQuery extends z.ZodType ? z.infer<TQuery> : undefined;
   };
 
-  return <TCtx extends RouteContext>(
-    next: RouteHandler<TCtx & Added>,
-  ): RouteHandler<TCtx> => {
+  return <TCtx extends RouteContext>(next: RouteHandler<TCtx & Added>): RouteHandler<TCtx> => {
     return async (ctx) => {
       let body: unknown = undefined;
       let query: unknown = undefined;

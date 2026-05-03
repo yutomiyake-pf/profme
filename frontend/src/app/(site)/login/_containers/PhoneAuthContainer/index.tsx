@@ -1,11 +1,7 @@
 "use client";
 
 import { type ReactNode, type RefObject, useEffect, useRef } from "react";
-import {
-  type ConfirmationResult,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-} from "firebase/auth";
+import { type ConfirmationResult, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
 
 export interface PhoneAuthRenderProps {

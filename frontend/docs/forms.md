@@ -4,10 +4,10 @@
 
 `useFormContext()` から直接 `formState.errors` や `watch` を destructure すると **Proxy subscription が効かず、フォーム state が変化しても再レンダリングされない**。子コンポーネントでは必ず以下を使う。
 
-| やりたいこと | NG (動かないことがある) | OK |
-|---|---|---|
-| errors を購読 | `const { formState: { errors } } = useFormContext()` | `const { errors } = useFormState({ control })` |
-| 特定 field を購読 | `const v = watch("name")` | `const v = useWatch({ control, name: "name" })` |
+| やりたいこと      | NG (動かないことがある)                              | OK                                              |
+| ----------------- | ---------------------------------------------------- | ----------------------------------------------- |
+| errors を購読     | `const { formState: { errors } } = useFormContext()` | `const { errors } = useFormState({ control })`  |
+| 特定 field を購読 | `const v = watch("name")`                            | `const v = useWatch({ control, name: "name" })` |
 
 `useForm` を直接呼んでいる本人 (= Form のオーナー component) は destructure で OK。罠が発生するのは `useFormContext` 経由のとき。
 
@@ -26,7 +26,9 @@ const snsErrors: Record<SnsField, string | undefined> = {
 };
 
 // 使う
-{snsInputs.map(({ name }) => <Input error={snsErrors[name]} {...register(name)} />)}
+{
+  snsInputs.map(({ name }) => <Input error={snsErrors[name]} {...register(name)} />);
+}
 ```
 
 ## controlled + register の罠
@@ -69,8 +71,8 @@ relationship: z.enum(ENDORSEMENT_RELATIONSHIPS),
 ## reset の使い方
 
 ```tsx
-methods.reset();              // defaultValues に戻す
-methods.reset(newValues);     // 任意の値に上書き
+methods.reset(); // defaultValues に戻す
+methods.reset(newValues); // 任意の値に上書き
 ```
 
 - 成功 toast 後の form reset は `reset()` のみで OK

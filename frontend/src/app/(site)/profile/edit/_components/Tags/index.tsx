@@ -22,13 +22,7 @@ interface TagInputSectionProps {
   hint: string;
 }
 
-const TagInputSection = ({
-  field,
-  label,
-  placeholder,
-  variant,
-  hint,
-}: TagInputSectionProps) => {
+const TagInputSection = ({ field, label, placeholder, variant, hint }: TagInputSectionProps) => {
   const { control, setValue } = useFormContext<ProfileFormValues>();
   const tags = useWatch({ control, name: field });
   const [input, setInput] = useState("");

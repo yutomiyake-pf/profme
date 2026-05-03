@@ -2,12 +2,12 @@
 
 ## Container / Component / Page の役割
 
-| 役割 | 場所 | クライアント/サーバ | 責務 |
-|---|---|---|---|
-| `page.tsx` | `app/<feature>/page.tsx` | server | ルーティング + ミドルウェア合成 + Container 起動 |
-| `PageContainer` | `_containers/PageContainer/` | server | API/DataConnect から初期データ取得 → 必要な形に transform → render-prop で Component に渡す |
-| 機能別 `xxxContainer` | `_containers/xxx/` | client (`"use client"`) | 副作用 (POST/PUT、ファイル upload、router.refresh) を提供する render-prop |
-| Component | `_components/` | server / client | 純粋表示。API レスポンス型に依存させない |
+| 役割                  | 場所                         | クライアント/サーバ     | 責務                                                                                        |
+| --------------------- | ---------------------------- | ----------------------- | ------------------------------------------------------------------------------------------- |
+| `page.tsx`            | `app/<feature>/page.tsx`     | server                  | ルーティング + ミドルウェア合成 + Container 起動                                            |
+| `PageContainer`       | `_containers/PageContainer/` | server                  | API/DataConnect から初期データ取得 → 必要な形に transform → render-prop で Component に渡す |
+| 機能別 `xxxContainer` | `_containers/xxx/`           | client (`"use client"`) | 副作用 (POST/PUT、ファイル upload、router.refresh) を提供する render-prop                   |
+| Component             | `_components/`               | server / client         | 純粋表示。API レスポンス型に依存させない                                                    |
 
 ### render-prop パターン
 
@@ -36,10 +36,8 @@ PageContainer は `getUserResponseSchema` 経由で API から受けた値を、
 `src/app/api/utils/` の `createRoute` で flat に合成:
 
 ```ts
-export const POST = createRoute(
-  withSession(),
-  withZod({ body: schema }),
-  async ({ user, body }) => NextResponse.json({ ok: true }),
+export const POST = createRoute(withSession(), withZod({ body: schema }), async ({ user, body }) =>
+  NextResponse.json({ ok: true }),
 );
 ```
 

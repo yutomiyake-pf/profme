@@ -63,10 +63,10 @@ await dataConnectAdmin.executeMutation<UpdateMyProfileData, UpdateMyProfileVaria
 
 ## @auth レベル運用
 
-| level | 用途 |
-|---|---|
-| `PUBLIC` | 公開閲覧用 (例: `GetProfile`、`GetEndorsementsByRecipient`)。PII を含めない |
-| `USER` | 認証済ユーザのコンテキストで実行 (admin SDK + impersonate で呼ぶ) |
+| level       | 用途                                                                          |
+| ----------- | ----------------------------------------------------------------------------- |
+| `PUBLIC`    | 公開閲覧用 (例: `GetProfile`、`GetEndorsementsByRecipient`)。PII を含めない   |
+| `USER`      | 認証済ユーザのコンテキストで実行 (admin SDK + impersonate で呼ぶ)             |
 | `NO_ACCESS` | クライアントから直接叩けない server 専用 (例: `GetUserByPhone`、`CreateUser`) |
 
 クライアント SDK 経由のアクセスを撤廃済なので、本来 PUBLIC にする必要が無い operation は `NO_ACCESS` に絞る。

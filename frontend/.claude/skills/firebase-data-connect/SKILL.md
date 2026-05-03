@@ -44,7 +44,7 @@ type Follow @table @index(fields: ["follower", "followee"], unique: true) {
   id: UUID! @default(expr: "uuidV4()")
   follower: User!
   followee: User!
-  status: String!  # "pending" | "approved"
+  status: String! # "pending" | "approved"
   createdAt: Timestamp! @default(expr: "request.time")
 }
 ```
@@ -62,11 +62,17 @@ type Follow @table @index(fields: ["follower", "followee"], unique: true) {
 
 ```graphql
 mutation upsertMyProfile($input: UserInput!) @auth(level: USER) {
-  user_upsert(data: $input) { id }
+  user_upsert(data: $input) {
+    id
+  }
 }
 
 query myEndorsements @auth(level: USER) {
-  endorsements(where: { recipientUid: { _eq: "auth.uid" } }) { id episode tags }
+  endorsements(where: { recipientUid: { _eq: "auth.uid" } }) {
+    id
+    episode
+    tags
+  }
 }
 ```
 

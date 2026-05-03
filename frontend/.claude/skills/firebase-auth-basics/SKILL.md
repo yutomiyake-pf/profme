@@ -52,7 +52,10 @@ const sessionCookie = await adminAuth.createSessionCookie(idToken, {
   expiresIn: 14 * 24 * 60 * 60 * 1000,
 });
 res.cookies.set("__session", sessionCookie, {
-  httpOnly: true, secure: prod, sameSite: "lax", path: "/",
+  httpOnly: true,
+  secure: prod,
+  sameSite: "lax",
+  path: "/",
 });
 ```
 
@@ -62,13 +65,15 @@ res.cookies.set("__session", sessionCookie, {
 
 ```ts
 export const getCurrentUser = cache(async () => {
-  const cookieStore = await cookies();              // Next.js 16 は async
+  const cookieStore = await cookies(); // Next.js 16 は async
   const session = cookieStore.get("__session")?.value;
   if (!session) return null;
   try {
     const decoded = await adminAuth.verifySessionCookie(session, true);
     return { uid: decoded.uid, phoneNumber: decoded.phone_number };
-  } catch { return null; }
+  } catch {
+    return null;
+  }
 });
 ```
 

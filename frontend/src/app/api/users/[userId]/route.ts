@@ -4,10 +4,7 @@ import { dataConnectAdmin } from "@/lib/firebase/admin";
 
 export const runtime = "nodejs";
 
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ userId: string }> },
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params;
   const { data } = await dataConnectAdmin.executeQuery<GetProfileData, GetProfileVariables>(
     "GetProfile",

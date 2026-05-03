@@ -35,10 +35,7 @@ export const endorsementsResponseSchema = z.object({
 export const createEndorsementRequestSchema = z.object({
   relationship: z.enum(ENDORSEMENT_RELATIONSHIPS),
   episode: z.string().min(ENDORSEMENT_EPISODE_MIN).max(ENDORSEMENT_EPISODE_MAX),
-  tags: z
-    .array(z.enum(ENDORSEMENT_TAGS))
-    .min(1)
-    .max(ENDORSEMENT_MAX_TAGS),
+  tags: z.array(z.enum(ENDORSEMENT_TAGS)).min(1).max(ENDORSEMENT_MAX_TAGS),
 });
 
 export const createEndorsementResponseSchema = z.object({

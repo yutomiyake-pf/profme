@@ -18,11 +18,7 @@ export const EndorsementList = ({ endorsements }: Props) => {
       {endorsements.map((endorsement) => (
         <Card key={endorsement.id} className={styles.endorsementCard} padding="lg">
           <div className={styles.header}>
-            <Avatar
-              name={endorsement.authorName}
-              src={endorsement.authorAvatarUrl}
-              size="md"
-            />
+            <Avatar name={endorsement.authorName} src={endorsement.authorAvatarUrl} size="md" />
             <div className={styles.meta}>
               <p className={styles.authorName}>{endorsement.authorName}</p>
               {endorsement.relationship && (

@@ -27,13 +27,7 @@ interface TabsProps {
   className?: string;
 }
 
-export const Tabs = ({
-  children,
-  defaultValue,
-  value,
-  onValueChange,
-  className,
-}: TabsProps) => {
+export const Tabs = ({ children, defaultValue, value, onValueChange, className }: TabsProps) => {
   const [internalTab, setInternalTab] = useState(defaultValue);
   const activeTab = value ?? internalTab;
 

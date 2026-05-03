@@ -11,11 +11,5 @@ mutation DeleteAllMyCustomLinks @auth(level: USER) {
 # 自分の CustomLink を 1 件追加。userUid は CEL で auth.uid を強制する
 # (リクエスト body から uid を受けないので、他人の行を作れない)
 mutation CreateMyCustomLink($title: String!, $url: String!) @auth(level: USER) {
-  customLink_insert(
-    data: {
-      userUid_expr: "auth.uid"
-      title: $title
-      url: $url
-    }
-  )
+  customLink_insert(data: { userUid_expr: "auth.uid", title: $title, url: $url })
 }

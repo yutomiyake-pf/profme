@@ -27,10 +27,8 @@ export const LoginForm = () => {
   const [confirmation, setConfirmation] = useState<ConfirmationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handlePhoneInput = (raw: string) =>
-    setPhoneNumber(raw.replace(/[^0-9]/g, "").slice(0, 11));
-  const handleOtpInput = (raw: string) =>
-    setOtpCode(raw.replace(/[^0-9]/g, "").slice(0, 6));
+  const handlePhoneInput = (raw: string) => setPhoneNumber(raw.replace(/[^0-9]/g, "").slice(0, 11));
+  const handleOtpInput = (raw: string) => setOtpCode(raw.replace(/[^0-9]/g, "").slice(0, 6));
 
   const goBackToPhone = () => {
     setStep("phone");

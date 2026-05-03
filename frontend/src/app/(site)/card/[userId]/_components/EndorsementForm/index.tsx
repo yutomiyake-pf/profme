@@ -69,7 +69,9 @@ export const EndorsementForm = ({ recipientUserId }: Props) => {
             toast.success("評価を送信しました。承認されると公開されます");
             reset();
           } catch (err) {
-            toast.error(err instanceof Error ? `送信に失敗しました (${err.message})` : "送信に失敗しました");
+            toast.error(
+              err instanceof Error ? `送信に失敗しました (${err.message})` : "送信に失敗しました",
+            );
           }
         });
 
