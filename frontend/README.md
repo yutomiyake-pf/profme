@@ -94,6 +94,29 @@ npm run dev
 
 [http://localhost:3000](http://localhost:3000) でアプリが開きます。
 
+## テストデータの投入 (任意)
+
+ダッシュボードのページネーション・評価承認・フォロワー機能を実データで確認したい場合、シードを実行できます (emulator 起動中に別ターミナルで)。
+
+```bash
+npm run seed
+```
+
+実行内容 (Firebase Auth と Postgres を `TRUNCATE` で完全クリアしてから書き込むので何度走らせても冪等):
+
+| 内容                                 | 件数 | 補足                                  |
+| ------------------------------------ | ---- | ------------------------------------- |
+| メインユーザ (Auth + DB)             | 1    | uid `Sd9oW2xMzC4hY7BfRk1VqJpL5tZc`    |
+| フィラーユーザ (DB のみ)             | 100  | follower / endorsement author 用      |
+| フォロー申請 (pending)               | 25   | Dashboard ページネーション 2 ページ分 |
+| フォロワー (approved)                | 25   | 同上                                  |
+| 評価の承認待ち (pending endorsement) | 25   | 同上                                  |
+| 公開済み評価 (approved endorsement)  | 10   | カードページの 2 ページ分 (5/page)    |
+
+メインユーザの電話番号 `+81 90 9876 5432` でログインすると、ダッシュボード各タブで 2 ページ分のデータが確認できます。
+
+> **安全装置**: `NODE_ENV=development` かつ `FIREBASE_AUTH_EMULATOR_HOST` が localhost を向いている場合のみ実行可能。本番には絶対に向きません。
+
 ## 認証フローの動作確認
 
 電話番号認証は Emulator では SMS が飛ばないので、認証コードを別経路で取得します。
@@ -125,6 +148,7 @@ npm run dev
 | `npm run format:check`         | Prettier チェックのみ                                          |
 | `npm run emulators:start`      | Firebase Emulator (Auth/Storage/DataConnect) 起動              |
 | `npm run emulators:stop`       | Emulator プロセスを kill                                       |
+| `npm run seed`                 | テストデータ投入 (Auth / DB を全クリアしてから書き込む)        |
 | `npm run dataconnect:generate` | Data Connect の TS SDK を再生成 (`src/dataconnect-generated/`) |
 | `npm run dataconnect:psql`     | Data Connect Emulator の PGlite に psql 接続                   |
 

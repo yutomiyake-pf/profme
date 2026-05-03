@@ -19,6 +19,7 @@
     "dataconnect:psql": "PGHOST=127.0.0.1 PGPORT=5433 PGUSER=postgres PGPASSWORD=postgres PGDATABASE=profme-dev-database psql",
     "emulators:start": "firebase emulators:start",
     "emulators:stop": "pkill -f 'firebase emulators' 2>/dev/null; pkill -f 'dataconnect-emulator' 2>/dev/null; pkill -f 'pglite' 2>/dev/null; true",
+    "seed": "NODE_ENV=development node --env-file=.env.local scripts/seed.mts",
     "postinstall": "npm run dataconnect:generate || true"
   },
   "dependencies": {
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
@@ -46,6 +48,7 @@
     "eslint-config-next": "16.2.4",
     "eslint-config-prettier": "10.1.8",
     "firebase-tools": "^15.16.0",
+    "pg": "^8.20.0",
     "prettier": "3.8.3",
     "typescript": "^5"
   }
