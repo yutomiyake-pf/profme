@@ -1,0 +1,26 @@
+# 自分↔対象 の follow 行 (双方向) を 1 リクエストで取得
+query GetFollowRelationship($other: String!) @auth(level: USER) {
+  outgoing: follow(key: { followerUid_expr: "auth.uid", followeeUid: $other }) {
+    status
+  }
+  incoming: follow(key: { followerUid: $other, followeeUid_expr: "auth.uid" }) {
+    status
+  }
+}
+
+# 自分→対象 の follow 申請 (status="pending")。
+# 同時 POST race で duplicate key エラーになるのを防ぐため upsert で実行する
+# (既存行があっても status は pending のまま上書きされるだけで実害なし)
+mutation CreateFollowRequest($followeeUid: String!) @auth(level: USER) {
+  follow_upsert(
+    data: { followerUid_expr: "auth.uid", followeeUid: $followeeUid, status: "pending" }
+  )
+}
+
+# 対象→自分 の pending リクエストを承認 (status="approved", approvedAt をセット)
+mutation ApproveIncomingFollow($otherUid: String!) @auth(level: USER) {
+  follow_update(
+    key: { followerUid: $otherUid, followeeUid_expr: "auth.uid" }
+    data: { status: "approved", approvedAt_expr: "request.time" }
+  )
+}

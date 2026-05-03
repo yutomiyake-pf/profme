@@ -1,21 +1,24 @@
 import { z } from "zod";
+import {
+  ENDORSEMENT_EPISODE_MAX,
+  ENDORSEMENT_EPISODE_MIN,
+  ENDORSEMENT_MAX_TAGS,
+  ENDORSEMENT_RELATIONSHIPS,
+  ENDORSEMENT_TAGS,
+} from "@/constants/endorsement";
 
 export const endorsementFormSchema = z.object({
-  relationship: z.string(),
+  relationship: z.enum(ENDORSEMENT_RELATIONSHIPS, {
+    message: "関係性を選択してください",
+  }),
   episode: z
     .string()
-    .min(30, "30文字以上で入力してください")
-    .max(300, "300文字以内で入力してください"),
+    .min(ENDORSEMENT_EPISODE_MIN, `${ENDORSEMENT_EPISODE_MIN}文字以上で入力してください`)
+    .max(ENDORSEMENT_EPISODE_MAX, `${ENDORSEMENT_EPISODE_MAX}文字以内で入力してください`),
   tags: z
-    .array(z.string())
+    .array(z.enum(ENDORSEMENT_TAGS))
     .min(1, "評価タグを1つ以上選択してください")
-    .max(3, "評価タグは3つまで選択できます"),
+    .max(ENDORSEMENT_MAX_TAGS, `評価タグは${ENDORSEMENT_MAX_TAGS}つまで選択できます`),
 });
 
 export type EndorsementFormValues = z.infer<typeof endorsementFormSchema>;
-
-export const defaultEndorsementFormValues: EndorsementFormValues = {
-  relationship: "",
-  episode: "",
-  tags: [],
-};

@@ -1,0 +1,40 @@
+# Endorsement 申請を pending で作成。受信側 (recipient) が承認するまで非公開。
+mutation CreateEndorsementRequest(
+  $recipientUid: String!
+  $relationship: String
+  $episode: String!
+  $tags: [String!]!
+) @auth(level: USER) {
+  endorsement_insert(
+    data: {
+      recipientUid: $recipientUid
+      authorUid_expr: "auth.uid"
+      relationship: $relationship
+      episode: $episode
+      tags: $tags
+      status: "pending"
+    }
+  )
+}
+
+# 公開閲覧用: 受信ユーザの承認済み Endorsement をページネーションで取得
+query GetEndorsementsByRecipient($recipientUid: String!, $limit: Int!, $offset: Int!)
+@auth(level: PUBLIC) {
+  endorsements(
+    where: { recipientUid: { eq: $recipientUid }, status: { eq: "approved" } }
+    orderBy: [{ approvedAt: DESC }]
+    limit: $limit
+    offset: $offset
+  ) {
+    id
+    relationship
+    episode
+    tags
+    approvedAt
+    author {
+      uid
+      displayName
+      avatarUrl
+    }
+  }
+}

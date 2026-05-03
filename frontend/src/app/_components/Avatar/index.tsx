@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import styles from "./styles.module.css";
@@ -28,19 +31,29 @@ const getInitials = (name: string): string => {
 
 export const Avatar = ({ src, name, size = "md", className }: Props) => {
   const dimension = sizeMap[size];
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setHasError(false);
+  }, [src, setHasError]);
+
+  const showImage = src && !hasError;
 
   return (
     <div
       className={clsx(styles.avatar, styles[size], className)}
       style={{ width: dimension, height: dimension }}
     >
-      {src ? (
+      {showImage ? (
         <Image
           src={src}
           alt={`${name}のアバター`}
           width={dimension}
           height={dimension}
           className={styles.image}
+          unoptimized
+          onError={() => setHasError(true)}
         />
       ) : (
         <span className={styles.initials} aria-hidden="true">

@@ -1,5 +1,5 @@
 # Endorsement: 他己評価 (フォロワーが投稿 → 受信者が承認すると公開)。
-# status: "pending" | "approved" | "rejected"
+# status: "pending" | "approved"
 
 type Endorsement @table {
   id: UUID! @default(expr: "uuidV4()")
