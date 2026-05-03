@@ -2,6 +2,7 @@ import { z } from "zod";
 import { composePage, withSession, withZodSearchParams } from "@/lib/next";
 import { Dashboard } from "./_components/Dashboard";
 import { DEFAULT_TAB, TAB_QUERY_KEY, TAB_VALUES } from "./_components/Dashboard/tabs";
+import { PageContainer } from "./_containers/PageContainer";
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -19,7 +20,11 @@ export default async function Page(props: Props) {
     withZodSearchParams(searchParamsSchema),
     async ({ parsedSearchParams }) => {
       const activeTab = parsedSearchParams[TAB_QUERY_KEY] ?? DEFAULT_TAB;
-      return <Dashboard activeTab={activeTab} />;
+      return (
+        <PageContainer>
+          {({ myCard }) => <Dashboard activeTab={activeTab} myCard={myCard} />}
+        </PageContainer>
+      );
     },
   )(props);
 }

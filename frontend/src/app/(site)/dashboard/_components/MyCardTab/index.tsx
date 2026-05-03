@@ -9,40 +9,22 @@ import { IoCopyOutline, IoExpandOutline } from "react-icons/io5";
 import { Card } from "@/app/_components/Card";
 import { Dialog, DialogHandle } from "@/app/_components/Dialog";
 import { FullBusinessCard } from "@/app/_components/FullBusinessCard";
-import { CardTheme, cardThemes } from "@/constants/cardTheme";
+import { type CardTheme, cardThemes } from "@/constants/cardTheme";
+import type { MyCardProfile } from "../../_containers/PageContainer";
+import { UpdateCardThemeContainer } from "../../_containers/UpdateCardThemeContainer";
 import styles from "./styles.module.css";
 
-const mockProfile = {
-  displayName: "山田 太郎",
-  university: "東京大学",
-  faculty: "工学部",
-  grade: "3年",
-  bio: "フロントエンドエンジニアを目指して日々学習中。React/Next.jsが好きです。趣味はコーヒーと読書。",
-  gakuchika:
-    "大学2年次からプログラミングサークルに所属し、チームリーダーとしてハッカソンに参加。Web アプリのフロントエンド設計を担当し、初心者メンバーへの技術指導も行いました。",
-  avatarUrl: null,
-  skills: ["React", "TypeScript", "Next.js", "Node.js"],
-  hobbies: ["コーヒー", "読書", "映画鑑賞"],
-  qualifications: ["TOEIC 800", "応用情報技術者"],
-  snsLinks: {
-    twitter: "https://x.com/yamada_taro",
-    instagram: "https://instagram.com/yamada_taro",
-    github: "https://github.com/yamada-taro",
-    linkedin: null,
-  },
-  customLinks: [
-    { title: "ポートフォリオ", url: "https://yamada-taro.dev" },
-    { title: "ブログ", url: "https://blog.yamada-taro.dev" },
-  ],
-};
+interface Props {
+  profile: MyCardProfile;
+}
 
-const cardUrl = "https://cardus.app/card/user123";
-const cardPagePath = "/card/user123";
-
-export const MyCardTab = () => {
-  const [selectedTheme, setSelectedTheme] = useState<CardTheme>("navy");
+export const MyCardTab = ({ profile }: Props) => {
+  const [selectedTheme, setSelectedTheme] = useState<CardTheme>(profile.cardTheme);
   const [copied, setCopied] = useState(false);
   const qrDialogRef = useRef<DialogHandle>(null);
+
+  const cardPagePath = `/card/${profile.uid}`;
+  const cardUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}${cardPagePath}`;
 
   const handleCopyUrl = async () => {
     await navigator.clipboard.writeText(cardUrl);
@@ -72,29 +54,59 @@ export const MyCardTab = () => {
           </div>
         </div>
 
-        <FullBusinessCard profile={{ ...mockProfile, cardTheme: selectedTheme }} />
+        <FullBusinessCard
+          profile={{
+            displayName: profile.displayName,
+            university: profile.university,
+            faculty: profile.faculty,
+            grade: profile.grade,
+            bio: profile.bio,
+            gakuchika: profile.gakuchika,
+            avatarUrl: profile.avatarUrl,
+            cardTheme: selectedTheme,
+            skills: profile.skills,
+            hobbies: profile.hobbies,
+            qualifications: profile.qualifications,
+            snsLinks: profile.snsLinks,
+            customLinks: profile.customLinks,
+          }}
+        />
 
-        <div className={styles.themeSelector}>
-          <p className={styles.themeSelectorLabel}>カラーテーマ</p>
-          <div className={styles.themeOptions}>
-            {cardThemes.map((theme) => (
-              <button
-                key={theme.id}
-                type="button"
-                className={clsx(
-                  styles.themeButton,
-                  styles[theme.id],
-                  selectedTheme === theme.id && styles.selected,
-                )}
-                onClick={() => setSelectedTheme(theme.id)}
-                aria-label={`${theme.label}テーマを選択`}
-                aria-pressed={selectedTheme === theme.id}
-              >
-                <span className={styles.themeColor} />
-              </button>
-            ))}
-          </div>
-        </div>
+        <UpdateCardThemeContainer>
+          {({ isSubmitting, updateTheme }) => (
+            <div className={styles.themeSelector}>
+              <p className={styles.themeSelectorLabel}>カラーテーマ</p>
+              <div className={styles.themeOptions}>
+                {cardThemes.map((theme) => (
+                  <button
+                    key={theme.id}
+                    type="button"
+                    className={clsx(
+                      styles.themeButton,
+                      styles[theme.id],
+                      selectedTheme === theme.id && styles.selected,
+                    )}
+                    onClick={async () => {
+                      const previous = selectedTheme;
+                      // 楽観的に切り替え、API 失敗時のみ巻き戻す
+                      setSelectedTheme(theme.id);
+                      try {
+                        await updateTheme(theme.id);
+                      } catch {
+                        setSelectedTheme(previous);
+                      }
+                    }}
+                    disabled={isSubmitting}
+                    aria-label={`${theme.label}テーマを選択`}
+                    aria-pressed={selectedTheme === theme.id}
+                  >
+                    <span className={styles.themeColor} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </UpdateCardThemeContainer>
 
         <Link href={cardPagePath} className={styles.viewPageLink}>
           名刺ページを見る →

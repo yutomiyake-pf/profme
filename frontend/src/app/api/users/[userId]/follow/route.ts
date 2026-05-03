@@ -60,7 +60,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ use
       await dataConnectAdmin.executeMutation<
         ApproveIncomingFollowData,
         ApproveIncomingFollowVariables
-      >("ApproveIncomingFollow", { otherUid: userId }, impersonate);
+      >("ApproveIncomingFollow", { me: user.uid, otherUid: userId }, impersonate);
     } else if (current.outgoing === "none") {
       await dataConnectAdmin.executeMutation<CreateFollowRequestData, CreateFollowRequestVariables>(
         "CreateFollowRequest",

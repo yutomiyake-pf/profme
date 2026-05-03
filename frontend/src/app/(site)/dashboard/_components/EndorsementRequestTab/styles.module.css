@@ -76,3 +76,9 @@
   display: flex;
   gap: var(--spacing-sm);
 }
+
+.errorMessage {
+  font-size: var(--font-size-sm);
+  color: var(--color-error, var(--color-gray-600));
+  text-align: center;
+}

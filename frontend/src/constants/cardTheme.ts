@@ -12,3 +12,9 @@ export const cardThemes = [
 ] as const;
 
 export type CardTheme = (typeof cardThemes)[number]["id"];
+
+// z.enum 用に id を非空 tuple として再エクスポート (cardThemes は固定なので as 安全)
+export const cardThemeIds = cardThemes.map((t) => t.id) as unknown as readonly [
+  CardTheme,
+  ...CardTheme[],
+];

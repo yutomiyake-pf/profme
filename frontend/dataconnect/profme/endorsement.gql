@@ -38,3 +38,55 @@ query GetEndorsementsByRecipient($recipientUid: String!, $limit: Int!, $offset: 
     }
   }
 }
+
+# 自分宛の pending Endorsement をページネーションで取得 (承認待ち一覧)。
+# totals[0]._count で総件数を取る (0 件のときは ?? 0)。
+query GetPendingEndorsementsForRecipient($me: String!, $limit: Int!, $offset: Int!)
+@auth(level: USER) {
+  items: endorsements(
+    where: { recipientUid: { eq: $me }, status: { eq: "pending" } }
+    orderBy: [{ createdAt: DESC }]
+    limit: $limit
+    offset: $offset
+  ) {
+    id
+    relationship
+    episode
+    tags
+    createdAt
+    author {
+      uid
+      displayName
+      avatarUrl
+    }
+  }
+  totals: endorsements(where: { recipientUid: { eq: $me }, status: { eq: "pending" } }) {
+    _count
+  }
+}
+
+# Pending Endorsement の承認 (status="approved", approvedAt をセット)。
+# - id 単独だと他人の endorsement も触れてしまうので recipientUid で所有者チェック
+# - status="pending" を where に含めて再承認 (approvedAt 上書き) を防ぐ
+mutation ApproveEndorsement($me: String!, $endorsementId: UUID!) @auth(level: USER) {
+  endorsement_updateMany(
+    where: {
+      id: { eq: $endorsementId }
+      recipientUid: { eq: $me }
+      status: { eq: "pending" }
+    }
+    data: { status: "approved", approvedAt_expr: "request.time" }
+  )
+}
+
+# Pending Endorsement の却下 (= 行削除)。
+# 自分宛 (recipient=自分) かつ pending のものだけを削除対象にする。
+mutation RejectEndorsement($me: String!, $endorsementId: UUID!) @auth(level: USER) {
+  endorsement_deleteMany(
+    where: {
+      id: { eq: $endorsementId }
+      recipientUid: { eq: $me }
+      status: { eq: "pending" }
+    }
+  )
+}

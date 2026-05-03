@@ -98,6 +98,15 @@ mutation CreateUser($uid: String!, $phoneNumber: String!, $displayName: String!)
 # 自動指定する。$uid を変数で受けないので、impersonate を忘れてもオペレーションは
 # 落ちる (誤って他人の行を更新できない設計)。
 # cardTheme と customLinks は別 UI で管理するのでここでは触らない。
+# 名刺カラーテーマだけを更新する軽量 mutation。
+# プロフィール編集フォームでは触らず、ダッシュボードのテーマ選択ボタンから単独で叩く。
+mutation UpdateMyCardTheme($cardTheme: String!) @auth(level: USER) {
+  user_update(
+    key: { uid_expr: "auth.uid" }
+    data: { cardTheme: $cardTheme, updatedAt_expr: "request.time" }
+  )
+}
+
 mutation UpdateMyProfile(
   $displayName: String!
   $university: String
