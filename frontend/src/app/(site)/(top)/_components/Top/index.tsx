@@ -5,9 +5,13 @@ import { FeaturesSection } from "../FeaturesSection";
 import { CardPreviewSection } from "../CardPreviewSection";
 import { EndorsementSection } from "../EndorsementSection";
 
-export const Top = () => {
+interface Props {
+  isLoggedIn: boolean;
+}
+
+export const Top = ({ isLoggedIn }: Props) => {
   return (
-    <PageLayout>
+    <PageLayout isLoggedIn={isLoggedIn}>
       <div className={styles.container}>
         <HeroSection />
         <FeaturesSection />
