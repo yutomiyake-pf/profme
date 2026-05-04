@@ -27,6 +27,10 @@ query GetMyProfile @auth(level: USER) {
     skills
     hobbies
     qualifications
+    universityVisible
+    snsVisible
+    endorsementsVisible
+    customLinksVisible
     customLinks: customLinks_on_user {
       id
       title
@@ -39,6 +43,7 @@ query GetMyProfile @auth(level: USER) {
 # 任意ユーザのプロフィール取得 (公開)
 # /card/[userId] や API Route から uid を明示して呼ぶ。
 # PUBLIC で誰でも引けるため phoneNumber 等の PII は返さない。
+# 各 *Visible フラグは API 側でフィールドを空にマスクするのに使う。
 query GetProfile($uid: String!) @auth(level: PUBLIC) {
   user(key: { uid: $uid }) {
     uid
@@ -57,6 +62,10 @@ query GetProfile($uid: String!) @auth(level: PUBLIC) {
     skills
     hobbies
     qualifications
+    universityVisible
+    snsVisible
+    endorsementsVisible
+    customLinksVisible
     customLinks: customLinks_on_user {
       id
       title
@@ -104,6 +113,26 @@ mutation UpdateMyCardTheme($cardTheme: String!) @auth(level: USER) {
   user_update(
     key: { uid_expr: "auth.uid" }
     data: { cardTheme: $cardTheme, updatedAt_expr: "request.time" }
+  )
+}
+
+# 名刺フィールド単位の公開設定をまとめて更新する。設定ページから 3 つのトグル毎に
+# full state を送って投げる (1 つだけ変えても 3 つ送る)。
+mutation UpdateMyFieldVisibility(
+  $universityVisible: Boolean!
+  $snsVisible: Boolean!
+  $endorsementsVisible: Boolean!
+  $customLinksVisible: Boolean!
+) @auth(level: USER) {
+  user_update(
+    key: { uid_expr: "auth.uid" }
+    data: {
+      universityVisible: $universityVisible
+      snsVisible: $snsVisible
+      endorsementsVisible: $endorsementsVisible
+      customLinksVisible: $customLinksVisible
+      updatedAt_expr: "request.time"
+    }
   )
 }
 

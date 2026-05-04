@@ -59,3 +59,63 @@
   color: var(--color-gray-400);
   flex-shrink: 0;
 }
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-600);
+  padding-inline-start: var(--spacing-xs);
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+  padding: var(--spacing-md);
+  font-size: var(--font-size-base);
+  color: var(--color-foreground);
+}
+
+.fieldRow:not(:last-child) {
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.fieldLabel {
+  flex: 1;
+  font-weight: var(--font-weight-medium);
+}
+
+.fieldRadios {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.radioOption {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-700);
+  cursor: pointer;
+}
+
+.radio {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.radio:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

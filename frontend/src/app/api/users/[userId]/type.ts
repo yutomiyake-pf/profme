@@ -17,6 +17,10 @@ export const getUserResponseSchema = z.object({
   skills: z.array(z.string()),
   hobbies: z.array(z.string()),
   qualifications: z.array(z.string()),
+  universityVisible: z.boolean(),
+  snsVisible: z.boolean(),
+  endorsementsVisible: z.boolean(),
+  customLinksVisible: z.boolean(),
   customLinks: z.array(
     z.object({
       id: z.string(),

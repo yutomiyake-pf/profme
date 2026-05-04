@@ -28,6 +28,17 @@ type User @table(key: ["uid"]) {
   hobbies: [String!]!
   qualifications: [String!]!
 
+  # 名刺の公開設定 (フィールド単位)
+  # owner 自身は常に閲覧可。他者は false の項目が API で空 (null / [] 等) にマスクされる。
+  # 大学情報 = university + faculty + grade をひとまとめ
+  universityVisible: Boolean! @default(value: true)
+  # SNS = twitter + instagram + github + linkedin をひとまとめ
+  snsVisible: Boolean! @default(value: true)
+  # 受け取った endorsement 一覧 (= /card/[uid] で表示される他己評価)
+  endorsementsVisible: Boolean! @default(value: true)
+  # ポートフォリオ等の自由リンク (CustomLink テーブル)
+  customLinksVisible: Boolean! @default(value: true)
+
   createdAt: Timestamp! @default(expr: "request.time")
   updatedAt: Timestamp! @default(expr: "request.time")
 }

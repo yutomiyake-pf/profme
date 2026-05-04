@@ -6,8 +6,11 @@ import type {
   GetEndorsementsByRecipientVariables,
   GetFollowRelationshipData,
   GetFollowRelationshipVariables,
+  GetProfileData,
+  GetProfileVariables,
 } from "@dataconnect/generated";
 import { createRoute, withSession, withZod } from "@/app/api/utils";
+import { getCurrentUser } from "@/lib/auth/server";
 import { dataConnectAdmin } from "@/lib/firebase/admin";
 import { createEndorsementRequestSchema, endorsementsQuerySchema } from "./type";
 
@@ -16,6 +19,22 @@ export const runtime = "nodejs";
 export async function GET(request: Request, { params }: { params: Promise<{ userId: string }> }) {
   const { userId } = await params;
   return createRoute(withZod({ query: endorsementsQuerySchema }), async ({ query }) => {
+    // owner 以外で endorsementsVisible=false なら空配列で返す。
+    // 表示判定だけのため owner check は profile fetch 1 回で済む。
+    const [{ data: profileData }, viewer] = await Promise.all([
+      dataConnectAdmin.executeQuery<GetProfileData, GetProfileVariables>("GetProfile", {
+        uid: userId,
+      }),
+      getCurrentUser(),
+    ]);
+    if (!profileData.user) {
+      return NextResponse.json({ error: "user_not_found" }, { status: 404 });
+    }
+    const isOwner = viewer?.uid === profileData.user.uid;
+    if (!isOwner && !profileData.user.endorsementsVisible) {
+      return NextResponse.json({ endorsements: [], total: 0 });
+    }
+
     const { data } = await dataConnectAdmin.executeQuery<
       GetEndorsementsByRecipientData,
       GetEndorsementsByRecipientVariables

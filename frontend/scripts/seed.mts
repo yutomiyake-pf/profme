@@ -153,6 +153,10 @@ type UserRow = {
   grade: string | null;
   bio: string | null;
   cardTheme: string;
+  universityVisible: boolean;
+  snsVisible: boolean;
+  endorsementsVisible: boolean;
+  customLinksVisible: boolean;
   skills: string[];
   hobbies: string[];
   qualifications: string[];
@@ -161,7 +165,7 @@ type UserRow = {
 // 任意のサイズの行配列を 1 INSERT で投入する。$1, $2, ... を行ごとに割り当てる。
 const insertUsers = async (rows: UserRow[]) => {
   if (rows.length === 0) return;
-  const cols = 11;
+  const cols = 15;
   const values: unknown[] = [];
   const placeholders = rows.map((row, rowIdx) => {
     const base = rowIdx * cols;
@@ -174,16 +178,21 @@ const insertUsers = async (rows: UserRow[]) => {
       row.grade,
       row.bio,
       row.cardTheme,
+      row.universityVisible,
+      row.snsVisible,
+      row.endorsementsVisible,
+      row.customLinksVisible,
       row.skills,
       row.hobbies,
       row.qualifications,
     );
-    return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5}, $${base + 6}, $${base + 7}, $${base + 8}, $${base + 9}, $${base + 10}, $${base + 11}, NOW(), NOW())`;
+    return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5}, $${base + 6}, $${base + 7}, $${base + 8}, $${base + 9}, $${base + 10}, $${base + 11}, $${base + 12}, $${base + 13}, $${base + 14}, $${base + 15}, NOW(), NOW())`;
   });
   await pg.query(
     `INSERT INTO "user"
        (uid, phone_number, display_name, university, faculty, grade, bio,
-        card_theme, skills, hobbies, qualifications, created_at, updated_at)
+        card_theme, university_visible, sns_visible, endorsements_visible, custom_links_visible,
+        skills, hobbies, qualifications, created_at, updated_at)
      VALUES ${placeholders.join(", ")}`,
     values,
   );
@@ -279,6 +288,10 @@ const main = async () => {
       grade: "3年",
       bio: "テスト用のメインユーザーです。",
       cardTheme: "navy",
+      universityVisible: true,
+      snsVisible: true,
+      endorsementsVisible: true,
+      customLinksVisible: true,
       skills: ["React", "TypeScript", "Next.js"],
       hobbies: ["コーヒー", "読書"],
       qualifications: ["TOEIC 800"],
@@ -294,6 +307,12 @@ const main = async () => {
         grade: null,
         bio: null,
         cardTheme: "navy",
+        // 各フラグを index でローテーションして偏らないように振り分ける。
+        // 5 通り (TTTT / FTTT / TFTT / TTFT / TTTF) を周回し全パターン混在に。
+        universityVisible: i % 5 !== 1,
+        snsVisible: i % 5 !== 2,
+        endorsementsVisible: i % 5 !== 3,
+        customLinksVisible: i % 5 !== 4,
         skills: [],
         hobbies: [],
         qualifications: [],
