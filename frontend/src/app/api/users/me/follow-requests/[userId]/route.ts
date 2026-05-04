@@ -18,7 +18,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ use
       return NextResponse.json({ error: "cannot_follow_self" }, { status: 400 });
     }
     // 0 件 = 既に approved or 行が無い (race) — 冪等扱いで成功を返す
-    await dataConnectAdmin.executeMutation<ApproveIncomingFollowData, ApproveIncomingFollowVariables>(
+    await dataConnectAdmin.executeMutation<
+      ApproveIncomingFollowData,
+      ApproveIncomingFollowVariables
+    >(
       "ApproveIncomingFollow",
       { me: user.uid, otherUid: userId },
       { impersonate: { authClaims: { sub: user.uid } } },
@@ -28,7 +31,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ use
 }
 
 // DELETE: 自分宛の pending リクエストを却下 (= 行削除)
-export async function DELETE(request: Request, { params }: { params: Promise<{ userId: string }> }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ userId: string }> },
+) {
   const { userId } = await params;
   return createRoute(withSession(), async ({ user }) => {
     if (user.uid === userId) {

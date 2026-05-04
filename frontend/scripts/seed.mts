@@ -12,12 +12,7 @@
  * Node 22.18+ の native TS strip-types を利用しているので外部ランナー (tsx 等) は不要。
  */
 import { createHash } from "node:crypto";
-import {
-  cert,
-  getApps,
-  initializeApp,
-  type ServiceAccount,
-} from "firebase-admin/app";
+import { cert, getApps, initializeApp, type ServiceAccount } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { Client } from "pg";
 
@@ -78,7 +73,10 @@ const serviceAccountRaw = requireEnv("FIREBASE_SERVICE_ACCOUNT_KEY");
 // 二重ガード: Auth emulator が localhost を向いていなければ中止
 const looksLocal = (host: string) => host.startsWith("127.0.0.1:") || host.startsWith("localhost:");
 if (!looksLocal(authEmulatorHost)) {
-  console.error("[seed] FIREBASE_AUTH_EMULATOR_HOST がエミュレータを向いていません:", authEmulatorHost);
+  console.error(
+    "[seed] FIREBASE_AUTH_EMULATOR_HOST がエミュレータを向いていません:",
+    authEmulatorHost,
+  );
   process.exit(1);
 }
 
@@ -131,10 +129,9 @@ const assertNoCollisions = () => {
 // ---------- Firebase Auth 全削除 ----------
 // auth emulator の専用エンドポイント。本番 SDK には無い。
 const clearAllAuthUsers = async () => {
-  const res = await fetch(
-    `http://${authEmulatorHost}/emulator/v1/projects/${projectId}/accounts`,
-    { method: "DELETE" },
-  );
+  const res = await fetch(`http://${authEmulatorHost}/emulator/v1/projects/${projectId}/accounts`, {
+    method: "DELETE",
+  });
   if (!res.ok) {
     throw new Error(`failed to clear auth users: ${res.status} ${await res.text()}`);
   }
@@ -305,20 +302,28 @@ const main = async () => {
   ];
   await insertUsers(userRows);
 
-  console.log(`[seed] inserting ${FOLLOW_REQUESTS_COUNT} pending follow requests + ${FOLLOWERS_COUNT} approved followers...`);
+  console.log(
+    `[seed] inserting ${FOLLOW_REQUESTS_COUNT} pending follow requests + ${FOLLOWERS_COUNT} approved followers...`,
+  );
   const followRows: FollowRow[] = [
-    ...Array.from({ length: REQUEST_RANGE.end - REQUEST_RANGE.start }, (_, k): FollowRow => ({
-      followerUid: fillerUid(REQUEST_RANGE.start + k),
-      followeeUid: MAIN_UID,
-      status: "pending",
-      approvedAtIso: null,
-    })),
-    ...Array.from({ length: FOLLOWER_RANGE.end - FOLLOWER_RANGE.start }, (_, k): FollowRow => ({
-      followerUid: fillerUid(FOLLOWER_RANGE.start + k),
-      followeeUid: MAIN_UID,
-      status: "approved",
-      approvedAtIso: daysAgoIso(k + 1),
-    })),
+    ...Array.from(
+      { length: REQUEST_RANGE.end - REQUEST_RANGE.start },
+      (_, k): FollowRow => ({
+        followerUid: fillerUid(REQUEST_RANGE.start + k),
+        followeeUid: MAIN_UID,
+        status: "pending",
+        approvedAtIso: null,
+      }),
+    ),
+    ...Array.from(
+      { length: FOLLOWER_RANGE.end - FOLLOWER_RANGE.start },
+      (_, k): FollowRow => ({
+        followerUid: fillerUid(FOLLOWER_RANGE.start + k),
+        followeeUid: MAIN_UID,
+        status: "approved",
+        approvedAtIso: daysAgoIso(k + 1),
+      }),
+    ),
   ];
   await insertFollows(followRows);
 

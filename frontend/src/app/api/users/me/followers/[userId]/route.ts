@@ -6,7 +6,10 @@ import { dataConnectAdmin } from "@/lib/firebase/admin";
 export const runtime = "nodejs";
 
 // DELETE: 自分のフォロワーを解除 (= 自分宛の approved 行を削除)
-export async function DELETE(request: Request, { params }: { params: Promise<{ userId: string }> }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ userId: string }> },
+) {
   const { userId } = await params;
   return createRoute(withSession(), async ({ user }) => {
     if (user.uid === userId) {

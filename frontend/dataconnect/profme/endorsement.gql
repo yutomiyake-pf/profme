@@ -38,9 +38,7 @@ query GetEndorsementsByRecipient($recipientUid: String!, $limit: Int!, $offset: 
       avatarUrl
     }
   }
-  totals: endorsements(
-    where: { recipientUid: { eq: $recipientUid }, status: { eq: "approved" } }
-  ) {
+  totals: endorsements(where: { recipientUid: { eq: $recipientUid }, status: { eq: "approved" } }) {
     _count
   }
 }
@@ -76,11 +74,7 @@ query GetPendingEndorsementsForRecipient($me: String!, $limit: Int!, $offset: In
 # - status="pending" を where に含めて再承認 (approvedAt 上書き) を防ぐ
 mutation ApproveEndorsement($me: String!, $endorsementId: UUID!) @auth(level: USER) {
   endorsement_updateMany(
-    where: {
-      id: { eq: $endorsementId }
-      recipientUid: { eq: $me }
-      status: { eq: "pending" }
-    }
+    where: { id: { eq: $endorsementId }, recipientUid: { eq: $me }, status: { eq: "pending" } }
     data: { status: "approved", approvedAt_expr: "request.time" }
   )
 }
@@ -89,10 +83,6 @@ mutation ApproveEndorsement($me: String!, $endorsementId: UUID!) @auth(level: US
 # 自分宛 (recipient=自分) かつ pending のものだけを削除対象にする。
 mutation RejectEndorsement($me: String!, $endorsementId: UUID!) @auth(level: USER) {
   endorsement_deleteMany(
-    where: {
-      id: { eq: $endorsementId }
-      recipientUid: { eq: $me }
-      status: { eq: "pending" }
-    }
+    where: { id: { eq: $endorsementId }, recipientUid: { eq: $me }, status: { eq: "pending" } }
   )
 }

@@ -52,10 +52,7 @@ export const Dashboard = ({ activeTab, myCard }: Props) => {
                         <TabTrigger value="follow-requests" badge={followRequests.total}>
                           フォロー申請
                         </TabTrigger>
-                        <TabTrigger
-                          value="endorsement-requests"
-                          badge={endorsementRequests.total}
-                        >
+                        <TabTrigger value="endorsement-requests" badge={endorsementRequests.total}>
                           評価の承認
                         </TabTrigger>
                         <TabTrigger value="followers">フォロワー</TabTrigger>

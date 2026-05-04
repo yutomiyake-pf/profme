@@ -26,11 +26,7 @@ mutation CreateFollowRequest($followeeUid: String!) @auth(level: USER) {
 # 戻り値は更新件数 (Int)。0 件 = 既に approved or 行無しのケース。
 mutation ApproveIncomingFollow($me: String!, $otherUid: String!) @auth(level: USER) {
   follow_updateMany(
-    where: {
-      followerUid: { eq: $otherUid }
-      followeeUid: { eq: $me }
-      status: { eq: "pending" }
-    }
+    where: { followerUid: { eq: $otherUid }, followeeUid: { eq: $me }, status: { eq: "pending" } }
     data: { status: "approved", approvedAt_expr: "request.time" }
   )
 }

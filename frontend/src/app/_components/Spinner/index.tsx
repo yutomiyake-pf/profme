@@ -11,7 +11,12 @@ interface Props {
   label?: string;
 }
 
-export const Spinner = ({ size = "md", inline = false, className, label = "読み込み中" }: Props) => {
+export const Spinner = ({
+  size = "md",
+  inline = false,
+  className,
+  label = "読み込み中",
+}: Props) => {
   const dot = (
     <span
       className={clsx(styles.spinner, styles[size], !inline && className)}
