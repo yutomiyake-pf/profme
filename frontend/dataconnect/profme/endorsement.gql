@@ -86,3 +86,9 @@ mutation RejectEndorsement($me: String!, $endorsementId: UUID!) @auth(level: USE
     where: { id: { eq: $endorsementId }, recipientUid: { eq: $me }, status: { eq: "pending" } }
   )
 }
+
+# 自分宛の Endorsement (status 問わず) を物理削除する。ダッシュボードの「評価」タブで
+# 受け取った評価を後から消したい時に使う。RejectEndorsement と違い status guard 無し。
+mutation DeleteMyEndorsement($me: String!, $endorsementId: UUID!) @auth(level: USER) {
+  endorsement_deleteMany(where: { id: { eq: $endorsementId }, recipientUid: { eq: $me } })
+}

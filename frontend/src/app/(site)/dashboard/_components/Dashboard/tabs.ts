@@ -3,6 +3,7 @@ export const TAB_VALUES = [
   "follow-requests",
   "endorsement-requests",
   "followers",
+  "endorsements",
 ] as const;
 
 export type TabValue = (typeof TAB_VALUES)[number];

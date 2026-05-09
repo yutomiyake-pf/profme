@@ -20,7 +20,7 @@ export function HeroSection() {
           <Link href="/login">
             <Button size="lg">無料で名刺を作る</Button>
           </Link>
-          <Link href="/dashboard/sample">
+          <Link href="/card/sample">
             <Button variant="outline" size="lg">
               サンプルを見る
             </Button>
