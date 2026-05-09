@@ -118,6 +118,7 @@
   /* Layout */
   --max-width-content: 800px;
   --header-height: 64px;
+  --footer-height: 120px;
 
   /* Transitions */
   --transition-fast: 150ms ease;

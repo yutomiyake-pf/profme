@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import clsx from "clsx";
 import styles from "./styles.module.css";
 import { Header } from "../Header";
 import { Footer } from "../Footer";
@@ -19,7 +20,15 @@ export const PageLayout = ({
   return (
     <div className={styles.container}>
       {enableHeader && <Header isLoggedIn={isLoggedIn} />}
-      <main className={styles.main}>{children}</main>
+      <main
+        className={clsx(
+          styles.main,
+          enableHeader && styles.withHeader,
+          enableFooter && styles.withFooter,
+        )}
+      >
+        {children}
+      </main>
       {enableFooter && <Footer />}
     </div>
   );
