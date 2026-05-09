@@ -45,7 +45,7 @@ export const Header = ({ isLoggedIn = false }: Props) => {
   return (
     <header className={styles.header}>
       <div className={styles.headerInner}>
-        <Link href="/" className={styles.logo}>
+        <Link href={isLoggedIn ? "/dashboard" : "/"} className={styles.logo}>
           <span className={styles.logoText}>Profme</span>
         </Link>
         <nav className={styles.nav}>

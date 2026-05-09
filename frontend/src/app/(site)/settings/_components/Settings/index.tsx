@@ -120,7 +120,7 @@ export const Settings = ({ initialVisibility }: Props) => {
           <Link href="/terms" className={styles.item}>
             {itemBody({ icon: <IoDocumentTextOutline size={20} />, label: "利用規約" })}
           </Link>
-          <Link href="/privacy" className={styles.item}>
+          <Link href="/privacy-policy" className={styles.item}>
             {itemBody({
               icon: <IoShieldCheckmarkOutline size={20} />,
               label: "プライバシーポリシー",

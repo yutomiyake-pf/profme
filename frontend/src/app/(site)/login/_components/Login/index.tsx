@@ -20,7 +20,7 @@ export const Login = () => {
               利用規約
             </Link>
             および
-            <Link target="_blank" href="/privacy" className={styles.link}>
+            <Link target="_blank" href="/privacy-policy" className={styles.link}>
               プライバシーポリシー
             </Link>
             に同意したものとみなされます。
