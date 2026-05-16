@@ -37,8 +37,9 @@ interface Props {
   children: (props: FollowersRenderProps) => ReactNode;
 }
 
-// 自分のフォロワー (followee=自分 で status=approved な行) を 20 件ずつ取得し、
-// 解除 (= 行削除) の副作用を提供する。
+// 自分のフォロワー (= 自分が関与する approved な follow 行 / 申請の向き不問)
+// を 20 件ずつ取得し、解除 (= 行削除) の副作用を提供する。
+// API 側で「自分でない側」の user が follower にマップされて返ってくる。
 export const FollowersContainer = ({ children }: Props) => {
   const [followers, setFollowers] = useState<FollowerItem[]>([]);
   const [total, setTotal] = useState(0);

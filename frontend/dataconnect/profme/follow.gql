@@ -61,30 +61,65 @@ mutation RejectIncomingFollow($otherUid: String!) @auth(level: USER) {
   follow_delete(key: { followerUid: $otherUid, followeeUid_expr: "auth.uid" })
 }
 
-# 自分のフォロワー (= followee=自分 で approved な行) のページネーション付き一覧。
+# 自分のフォロワー (= 自分が関与する approved な follow 行) のページネーション付き一覧。
+# follow は申請 → 承認の双方向関係なので「自分がフォローされた側」「自分がフォローした側」
+# どちらも承認済みなら "フォロワー" として扱う。_or で 2 方向ぶん拾い、API 側で
+# 自分でない方の user を表示用に選ぶ (follower/followee の両方を取得しておく)。
 query GetMyFollowers($me: String!, $limit: Int!, $offset: Int!) @auth(level: USER) {
   items: follows(
-    where: { followeeUid: { eq: $me }, status: { eq: "approved" } }
+    where: {
+      _and: [
+        { status: { eq: "approved" } }
+        { _or: [{ followeeUid: { eq: $me } }, { followerUid: { eq: $me } }] }
+      ]
+    }
     orderBy: [{ approvedAt: DESC }]
     limit: $limit
     offset: $offset
   ) {
     approvedAt
+    followerUid
+    followeeUid
     follower {
       uid
       displayName
       avatarUrl
       university
     }
+    followee {
+      uid
+      displayName
+      avatarUrl
+      university
+    }
   }
-  totals: follows(where: { followeeUid: { eq: $me }, status: { eq: "approved" } }) {
+  totals: follows(
+    where: {
+      _and: [
+        { status: { eq: "approved" } }
+        { _or: [{ followeeUid: { eq: $me } }, { followerUid: { eq: $me } }] }
+      ]
+    }
+  ) {
     _count
   }
 }
 
-# フォロワー解除 (= 自分宛の approved 行を削除)。
-# 行スキーマは pending と同じ複合キーのため follow_delete を使うが、
+# フォロワー解除 (= 自分が関与する approved 行を削除)。
+# 申請の向きはどちらでもあり得るので、deleteMany + _or で 2 方向を同時に消す。
 # 意味的に reject (申請却下) と分けるため別 mutation として定義する。
-mutation RemoveFollower($otherUid: String!) @auth(level: USER) {
-  follow_delete(key: { followerUid: $otherUid, followeeUid_expr: "auth.uid" })
+mutation RemoveFollower($me: String!, $otherUid: String!) @auth(level: USER) {
+  follow_deleteMany(
+    where: {
+      _and: [
+        { status: { eq: "approved" } }
+        {
+          _or: [
+            { followerUid: { eq: $otherUid }, followeeUid: { eq: $me } }
+            { followerUid: { eq: $me }, followeeUid: { eq: $otherUid } }
+          ]
+        }
+      ]
+    }
+  )
 }

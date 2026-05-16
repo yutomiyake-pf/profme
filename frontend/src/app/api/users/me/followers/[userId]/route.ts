@@ -5,7 +5,9 @@ import { dataConnectAdmin } from "@/lib/firebase/admin";
 
 export const runtime = "nodejs";
 
-// DELETE: 自分のフォロワーを解除 (= 自分宛の approved 行を削除)
+// DELETE: 自分のフォロワーを解除 (= 自分が関与する approved 行を削除)
+// 申請の向きはどちらでもあり得るので mutation 側は deleteMany + _or で
+// 双方向を 1 クエリで消す。$me は verified session の uid を渡す。
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ userId: string }> },
@@ -17,7 +19,7 @@ export async function DELETE(
     }
     await dataConnectAdmin.executeMutation<RemoveFollowerData, RemoveFollowerVariables>(
       "RemoveFollower",
-      { otherUid: userId },
+      { me: user.uid, otherUid: userId },
       { impersonate: { authClaims: { sub: user.uid } } },
     );
     return NextResponse.json({ ok: true });

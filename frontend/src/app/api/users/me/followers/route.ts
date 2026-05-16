@@ -6,7 +6,9 @@ import { followersQuerySchema } from "./type";
 
 export const runtime = "nodejs";
 
-// 自分のフォロワー (followee=自分 で status=approved な行) をページネーションで返す。
+// 自分のフォロワー (= 自分が関与する approved な follow 行) をページネーションで返す。
+// 申請の向きはどちらでもあり得るため、各行から「自分でない側」の user を選んで返す。
+// (followerUid === 自分 なら followee 側、そうでなければ follower 側が相手)
 export const GET = createRoute(
   withSession(),
   withZod({ query: followersQuerySchema }),
@@ -19,15 +21,18 @@ export const GET = createRoute(
       { me: user.uid, limit: query.limit, offset: query.offset },
       { impersonate: { authClaims: { sub: user.uid } } },
     );
-    const followers = data.items.map((row) => ({
-      follower: {
-        uid: row.follower.uid,
-        displayName: row.follower.displayName,
-        avatarUrl: row.follower.avatarUrl ?? null,
-        university: row.follower.university ?? null,
-      },
-      approvedAt: row.approvedAt ?? null,
-    }));
+    const followers = data.items.map((row) => {
+      const other = row.followerUid === user.uid ? row.followee : row.follower;
+      return {
+        follower: {
+          uid: other.uid,
+          displayName: other.displayName,
+          avatarUrl: other.avatarUrl ?? null,
+          university: other.university ?? null,
+        },
+        approvedAt: row.approvedAt ?? null,
+      };
+    });
     const total = data.totals[0]?._count ?? 0;
     return NextResponse.json({ followers, total });
   },
