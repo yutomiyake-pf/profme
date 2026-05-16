@@ -1,6 +1,9 @@
 # Follow: フォロー関係 (申請 → 承認 の 2 段階)。
 # 同じペアの重複申請を DB レベルで防ぐため (follower, followee) を複合主キーにする。
 # status: "pending" | "approved"
+#
+# follower / followee は `User!` なので Data Connect が FK に ON DELETE CASCADE を張る
+# → どちらかの User が削除されると関係も自動的に消える。
 
 type Follow @table(key: ["follower", "followee"]) {
   follower: User!

@@ -10,6 +10,7 @@ import {
   IoDocumentTextOutline,
   IoGridOutline,
   IoLogOutOutline,
+  IoPersonRemoveOutline,
   IoShieldCheckmarkOutline,
 } from "react-icons/io5";
 import { toast } from "sonner";
@@ -125,6 +126,9 @@ export const Settings = ({ initialVisibility }: Props) => {
               icon: <IoShieldCheckmarkOutline size={20} />,
               label: "プライバシーポリシー",
             })}
+          </Link>
+          <Link href="/settings/withdraw" className={styles.item}>
+            {itemBody({ icon: <IoPersonRemoveOutline size={20} />, label: "退会" })}
           </Link>
         </Card>
       </div>

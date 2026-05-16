@@ -1,5 +1,8 @@
 # Endorsement: 他己評価 (フォロワーが投稿 → 受信者が承認すると公開)。
 # status: "pending" | "approved"
+#
+# recipient / author は `User!` (required) なので Data Connect が FK に
+# ON DELETE CASCADE を張る → User 行を消すと Endorsement も自動削除される。
 
 type Endorsement @table {
   id: UUID! @default(expr: "uuidV4()")

@@ -1,5 +1,8 @@
 # CustomLink: ポートフォリオ・ブログ等の自由 URL (1 ユーザにつき最大 10)。
 # 並び順は createdAt 昇順 + クライアント側でドラッグ並べ替え時に再保存する想定。
+#
+# user は `User!` なので Data Connect が FK に ON DELETE CASCADE を張る
+# → User 行を消すと紐づく CustomLink も自動削除される。
 
 type CustomLink @table {
   id: UUID! @default(expr: "uuidV4()")

@@ -136,6 +136,14 @@ mutation UpdateMyFieldVisibility(
   )
 }
 
+# 退会: 自分の User 行を削除する。
+# Endorsement / Follow / CustomLink は schema 側の required ref で CASCADE が
+# 張られているので、user_delete だけで紐づく行も全て消える。
+# Firebase Auth のユーザ削除は API Route 側 (admin SDK) で別途行う。
+mutation DeleteMyAccount @auth(level: USER) {
+  user_delete(key: { uid_expr: "auth.uid" })
+}
+
 mutation UpdateMyProfile(
   $displayName: String!
   $university: String

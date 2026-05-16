@@ -3,12 +3,14 @@ import type {
   CreateMyCustomLinkData,
   CreateMyCustomLinkVariables,
   DeleteAllMyCustomLinksData,
+  DeleteMyAccountData,
   GetMyProfileData,
   UpdateMyProfileData,
   UpdateMyProfileVariables,
 } from "@dataconnect/generated";
 import { createRoute, withSession, withZod } from "@/app/api/utils";
-import { dataConnectAdmin } from "@/lib/firebase/admin";
+import { SESSION_COOKIE_NAME } from "@/lib/auth/server";
+import { adminAuth, dataConnectAdmin } from "@/lib/firebase/admin";
 import { updateMeRequestSchema } from "./type";
 
 export const runtime = "nodejs";
@@ -82,3 +84,20 @@ export const PUT = createRoute(
     return NextResponse.json({ ok: true });
   },
 );
+
+// DELETE /api/users/me — 退会 (User 行 + Firebase Auth ユーザの両方を削除)
+// User 行を消すと Endorsement / Follow / CustomLink は FK CASCADE で連鎖削除される。
+// Auth ユーザを後に消すのは、DB 失敗時にリカバリ (再ログイン → 再退会) が可能な順序にするため。
+// 成功したら session cookie も破棄してログアウト状態にする。
+export const DELETE = createRoute(withSession(), async ({ user }) => {
+  await dataConnectAdmin.executeMutation<DeleteMyAccountData, undefined>(
+    "DeleteMyAccount",
+    undefined,
+    { impersonate: { authClaims: { sub: user.uid } } },
+  );
+  await adminAuth.deleteUser(user.uid);
+
+  const res = NextResponse.json({ ok: true });
+  res.cookies.delete(SESSION_COOKIE_NAME);
+  return res;
+});

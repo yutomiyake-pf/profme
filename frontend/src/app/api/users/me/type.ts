@@ -71,3 +71,10 @@ export const updateMeResponseSchema = z.object({
 });
 
 export type UpdateMeResponse = z.infer<typeof updateMeResponseSchema>;
+
+/** DELETE /api/users/me (退会) のレスポンス */
+export const deleteMeResponseSchema = z.object({
+  ok: z.literal(true),
+});
+
+export type DeleteMeResponse = z.infer<typeof deleteMeResponseSchema>;
